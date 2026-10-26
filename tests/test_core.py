@@ -1,8 +1,10 @@
 import numpy as np
 import xarray as xr
+from odc.geo.geobox import GeoBox
+from odc.geo.xr import xr_coords
 
-from lakewatch.composite import to_reflectance
-from lakewatch.indices import area_ha, mndwi, ndwi, threshold
+from lakewatch.composite import load, save, to_reflectance
+from lakewatch.indices import area_ha, measure, mndwi, ndwi, threshold
 from lakewatch.stac import parse_boa_offset
 
 
@@ -33,3 +35,46 @@ def test_otsu_splits_water_from_land_and_area():
     assert -0.4 < t < 0.6
     assert area_ha(idx > t) == 0.5  # 50 pixels x 100 m^2
     assert threshold(idx, inside, "zero") == 0.0
+
+
+def _toy_composite():
+    """4x4 grid: left half water (green high, NIR/SWIR low), right half land."""
+    gb = GeoBox.from_bbox((0, 0, 40, 40), "EPSG:32643", resolution=10)
+    water = np.zeros((4, 4), bool)
+    water[:, :2] = True
+    band = lambda w, l: (("y", "x"), np.where(water, w, l).astype("float32"))
+    c = xr.Dataset(
+        {
+            "B02": band(0.1, 0.1),
+            "B03": band(0.3, 0.1),
+            "B04": band(0.1, 0.05),
+            "B08": band(0.05, 0.4),
+            "B11": band(0.05, 0.3),
+            "n_valid": band(3, 3),
+        },
+        coords=xr_coords(gb),
+    )
+    c["inside"] = (("y", "x"), np.ones((4, 4), bool))
+    c["lake"] = (("y", "x"), water)
+    c.attrs = {"n_scenes": 3, "valid_frac": 1.0}
+    return c, np.where(water, 0.9, 0.1).astype("float32")
+
+
+def test_measure_rows():
+    c, dw = _toy_composite()
+    rows = {r["method"]: r for r in measure(c, dw)}
+    assert set(rows) == {"ndwi_otsu", "ndwi_zero", "mndwi_otsu", "mndwi_zero", "dw_0.3", "dw_0.5", "dw_0.7"}
+    for r in rows.values():
+        assert r["water_area_ha"] == 0.08  # 8 pixels
+        assert r["iou_dw50"] == 1.0
+    assert rows["dw_0.5"]["veg_frac"] == 0.0
+
+
+def test_save_load_roundtrip(tmp_path):
+    c, _ = _toy_composite()
+    save(c, tmp_path / "c.tif")
+    back = load(tmp_path / "c.tif")
+    assert back.odc.geobox == c.odc.geobox
+    assert back.attrs == c.attrs
+    np.testing.assert_array_equal(back["lake"], c["lake"])
+    np.testing.assert_allclose(back["B03"], c["B03"])

@@ -11,14 +11,19 @@ uv sync
 uv run lakewatch lakes                                   # OSM -> configs/lakes.geojson (committed, pinned)
 uv run lakewatch lock                                    # -> data/scenes.lock.json + clear-day counts
 uv run lakewatch preview r19751547 2024 --season winter  # Bellandur composite + MNDWI/Otsu mask PNG
+export EE_PROJECT=<your-earth-engine-project>          # free non-commercial project; `uv run earthengine authenticate` once
+uv run lakewatch measure                                 # all lakes x years -> data/observations.parquet
 uv run pytest
 ```
+
+`measure` caches one GeoTIFF per lake-year in `data/composites/` (bands B02-B11 median reflectance, `n_valid`, `inside`/`lake` masks, `dw_water`); open them in QGIS for hand labelling.
 
 ## Findings so far (verified 2026-10-26)
 
 - **Reflectance offset** is not in Planetary Computer's STAC `raster:bands`; it is only in each item's `product-metadata` XML (`BOA_ADD_OFFSET`). The lock has 257 items with offset 0 and 271 with -1000, so it is read per item and stored in the lock.
 - **SCL** asset is `SCL` (20 m). Class codes are not in the metadata; ESA's standard codes are used.
 - **Clear days** (tile cloud < 20%) per candidate window, 2017-2025: winter (Jan-Feb) 7-11/yr, pre-monsoon (Mar-mid May) 8-14/yr, post-monsoon (mid Oct-Dec) 2-4/yr. 2017 has only 2-4 in every window.
+- **Bellandur (r19751547):** MNDWI and Dynamic World (p >= 0.5) agree at IoU 0.72-0.94 in normal years. 2020-2022 show ~86% vegetation cover inside the polygon and near-zero open water; there MNDWI+Otsu breaks (86 ha vs DW 0.6 ha in 2021) because the histogram is single-class. NDWI+Otsu is unreliable throughout.
 - **Lakes:** 222 named OSM candidates of at least 2 ha; 36 picked, 12 per size bin (2-10, 10-50, 50+ ha). Check the boundaries of "Vrishabhavati" and "Nagarbhavi Thorai" (D2).
 
 ## Decisions (as of 2026-10-26)

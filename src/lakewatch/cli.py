@@ -1,22 +1,27 @@
+import datetime as dt
 import json
 from collections import Counter
 from pathlib import Path
 
 import geopandas as gpd
 import numpy as np
+import pandas as pd
 import shapely
 import typer
 from skimage.io import imsave
 
+from lakewatch import composite as comp
+from lakewatch import dynworld, stac
 from lakewatch import lakes as lakes_mod
-from lakewatch import stac
-from lakewatch.composite import composite
 from lakewatch.indices import area_ha, mndwi, threshold
+from lakewatch.indices import measure as measure_lake_year
 
 app = typer.Typer(no_args_is_help=True)
 AOI = Path("configs/aoi.geojson")
 LAKES = Path("configs/lakes.geojson")
 LOCK = Path("data/scenes.lock.json")
+COMPOSITES = Path("data/composites")
+OBS = Path("data/observations.parquet")
 
 
 @app.command()
@@ -56,7 +61,7 @@ def preview(lake: str, year: int, season: str = "winter", out: Path = Path("data
         for r, it in zip(rows, stac.fetch_items([r["id"] for r in rows]))
         if shapely.geometry.shape(it.geometry).intersects(lake_ll)
     ]
-    c = composite([it for it, _ in pairs], [o for _, o in pairs], g.geometry[lake])
+    c = comp.composite([it for it, _ in pairs], [o for _, o in pairs], g.geometry[lake])
     idx = mndwi(c)
     t = threshold(idx, c["inside"])
     water = (idx > t) & c["inside"]
@@ -72,3 +77,66 @@ def preview(lake: str, year: int, season: str = "winter", out: Path = Path("data
     path = out / f"{lake}_{year}_{season}.png"
     imsave(path, (np.concatenate([rgb, mask_img], 1) * 255).astype("uint8"))
     typer.echo(f"-> {path}")
+
+
+@app.command()
+def measure(
+    ee_project: str = typer.Option(..., envvar="EE_PROJECT", help="Earth Engine Cloud project ID"),
+    only: str = typer.Option("", help="Comma-separated lake_ids (default: all)"),
+):
+    """Composite (cached as GeoTIFF in data/composites) + all methods for every lake-year -> observations.parquet."""
+    dynworld.init(ee_project)
+    g = gpd.read_file(LAKES).set_index("lake_id").to_crs(comp.CRS)
+    g_ll = g.to_crs(4326)
+    lock = json.loads(LOCK.read_text())
+    items = dict(zip([r["id"] for r in lock], stac.fetch_items([r["id"] for r in lock])))
+    lake_ids = only.split(",") if only else list(g.index)
+    COMPOSITES.mkdir(parents=True, exist_ok=True)
+    rows, failed = [], []
+    for lake in lake_ids:
+        for (year, season), recs in _group(lock).items():
+            path = COMPOSITES / f"{lake}_{year}_{season}.tif"
+            try:
+                if path.exists():
+                    c = comp.load(path)
+                else:
+                    recs = [
+                        r
+                        for r in recs
+                        if shapely.geometry.shape(items[r["id"]].geometry).intersects(g_ll.geometry[lake])
+                    ]
+                    c = comp.composite(
+                        [items[r["id"]] for r in recs], [r["boa_offset"] for r in recs], g.geometry[lake]
+                    )
+                    start, end = stac.SEASONS[season]
+                    end_excl = dt.date.fromisoformat(f"{year}-{end}") + dt.timedelta(days=1)
+                    c["dw_water"] = (
+                        ("y", "x"),
+                        dynworld.water_prob(c.odc.geobox, f"{year}-{start}", str(end_excl)),
+                    )
+                    comp.save(c, path)
+                if c.attrs["valid_frac"] == 0:
+                    failed.append((lake, year, "no valid pixels"))
+                    continue
+                base = {"lake_id": lake, "year": year, "season": season}
+                rows += [base | r for r in measure_lake_year(c, c["dw_water"].values)]
+                typer.echo(
+                    f"{lake} {year}: n_scenes={c.attrs['n_scenes']} valid_frac={c.attrs['valid_frac']:.2f}"
+                )
+            except Exception as e:  # noqa: BLE001 -- keep the long run going; every failure is reported below
+                failed.append((lake, year, repr(e)))
+                typer.echo(f"{lake} {year}: FAILED {e!r}", err=True)
+    obs = pd.DataFrame(rows)
+    obs.to_parquet(OBS, index=False)
+    typer.echo(f"{len(obs)} rows -> {OBS}; {len(failed)} lake-years failed")
+    for f in failed:
+        typer.echo(f"  {f}")
+    if failed:
+        raise typer.Exit(1)
+
+
+def _group(lock: list[dict]) -> dict:
+    out = {}
+    for r in lock:
+        out.setdefault((r["year"], r["season"]), []).append(r)
+    return dict(sorted(out.items()))
