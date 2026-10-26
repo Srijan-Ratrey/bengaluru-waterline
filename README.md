@@ -13,6 +13,7 @@ uv run lakewatch lock                                    # -> data/scenes.lock.j
 export EE_PROJECT=<your-earth-engine-project>          # free non-commercial project; `uv run earthengine authenticate` once
 uv run lakewatch measure                                 # all lakes x years -> data/observations.parquet
 uv run lakewatch sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
+uv run lakewatch label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
 uv run pytest
 ```
 
@@ -41,5 +42,7 @@ uv run pytest
 | D15 | Name: LakeWatch. Note: `0x101/lakewatch` and `Clnay5/lakewatch` are similar Sentinel-2 lake projects; review them before any novelty claim |
 | D16 | Sentinel-2 only for v1 |
 
-Still on spec defaults until their gates: D5, D6, D7, D8, D11, D14.
+| D5/D6 | Hand labels: 20 lakes (8 val + 12 test) x 2018, 2025, drawn on the Sentinel-2 composites ([guide](docs/LABELLING.md)). Train lakes use weak labels |
+
+Split frozen in [configs/split.json](configs/split.json), criteria in [configs/experiment.toml](configs/experiment.toml). Still on spec defaults until their gates: D7, D8, D11, D14.
 - **Full run (36 lakes x 2018-2025):** 21 of 36 lakes have >60% vegetation cover inside the polygon in a typical year; open-water-only methods report them as near-empty. Median IoU vs Dynamic World p>=0.5: MNDWI>0 0.46, MNDWI+Otsu 0.30, NDWI+Otsu 0.12, so Otsu is dropped as default. This drove D13.

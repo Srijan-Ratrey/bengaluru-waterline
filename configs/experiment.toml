@@ -1,0 +1,15 @@
+# Frozen 2026-10-26, before any hand labels exist. Do not edit after test labels are compared.
+# Test lakes (configs/split.json) are evaluated once, at the end. Thresholds are tuned on val lakes only.
+
+label_years = [2018, 2025]
+default_method = "mndwi_zero"   # best median IoU vs Dynamic World on the full run (0.46 vs Otsu 0.30)
+veg_lake_cutoff = 0.6           # median veg_frac above this = "vegetated lake"; below = "clean lake"
+
+[criteria]
+# Spec 9.4, with D13's vegetated lakes reported separately.
+clean_median_rel_area_error_max = 0.10   # open water, held-out clean test lakes
+interval_coverage_nominal = 0.90
+interval_coverage_tolerance_pp = 10      # observed coverage must be within +/-10 points of nominal
+# 3-class (water / veg / land) per-class IoU on test lakes is reported for all lakes.
+# Its pass/fail target is set from the val pilot and appended here BEFORE test evaluation.
+# Trend-sign agreement (2018 vs 2025 labelled area change) is reported, no target.

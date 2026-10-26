@@ -1,10 +1,12 @@
 import numpy as np
+import pandas as pd
 import xarray as xr
 from odc.geo.geobox import GeoBox
 from odc.geo.xr import xr_coords
 
 from lakewatch.composite import load, save, to_reflectance
 from lakewatch.indices import area_ha, measure, mndwi, ndwi, threshold
+from lakewatch.labels import split
 from lakewatch.stac import parse_boa_offset
 
 
@@ -78,3 +80,17 @@ def test_save_load_roundtrip(tmp_path):
     assert back.attrs == c.attrs
     np.testing.assert_array_equal(back["lake"], c["lake"])
     np.testing.assert_allclose(back["B03"], c["B03"])
+
+
+def test_split_is_disjoint_and_covers_all_lakes():
+    rng = np.random.default_rng(1)
+    lakes = pd.DataFrame(
+        {
+            "lake_id": [f"l{i}" for i in range(34)],
+            "area_ha": rng.uniform(2, 300, 34),
+            "veg_frac": rng.random(34),
+        }
+    )
+    s = split(lakes)
+    assert [len(s[k]) for k in ("test", "val", "train")] == [12, 8, 14]
+    assert sorted(s["test"] + s["val"] + s["train"]) == sorted(lakes["lake_id"])

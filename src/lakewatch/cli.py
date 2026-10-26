@@ -11,7 +11,7 @@ import typer
 from skimage.io import imsave
 
 from lakewatch import composite as comp
-from lakewatch import dynworld, stac
+from lakewatch import dynworld, labels, stac
 from lakewatch import lakes as lakes_mod
 from lakewatch.indices import measure as measure_lake_year
 from lakewatch.indices import mndwi
@@ -22,6 +22,8 @@ LAKES = Path("configs/lakes.geojson")
 LOCK = Path("data/scenes.lock.json")
 COMPOSITES = Path("data/composites")
 OBS = Path("data/observations.parquet")
+SPLIT = Path("configs/split.json")
+LABELS = Path("data/labels/labels.gpkg")
 
 
 @app.command()
@@ -135,6 +137,35 @@ def measure(
         typer.echo(f"  {f}")
     if failed:
         raise typer.Exit(1)
+
+
+@app.command()
+def label_prep(out: Path = Path("data/labelling"), seed: int = 0):
+    """Freeze the lake split (configs/split.json) and export QGIS inputs for test+val lakes x LABEL_YEARS."""
+    g = gpd.read_file(LAKES)
+    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    if SPLIT.exists():
+        sets = json.loads(SPLIT.read_text())
+        typer.echo(f"{SPLIT} exists; reusing it (delete it to re-split)")
+    else:
+        sets = labels.split(g.assign(veg_frac=g["lake_id"].map(veg)), seed)
+        SPLIT.write_text(json.dumps({"seed": seed, **sets}, indent=1) + "\n")
+    out.mkdir(parents=True, exist_ok=True)
+    for lake in sets["test"] + sets["val"]:
+        for year in labels.LABEL_YEARS:
+            c = comp.load(COMPOSITES / f"{lake}_{year}_winter.tif")
+            labels.export_8bit(c, ["B04", "B03", "B02"], 0.3, out / f"{lake}_{year}_rgb.tif")
+            labels.export_8bit(c, ["B11", "B08", "B04"], 0.4, out / f"{lake}_{year}_swir.tif")
+    utm = g.to_crs(comp.CRS)
+    utm.to_file(out / "lakes.gpkg", layer="lakes")
+    utm.assign(geometry=utm.buffer(150)).to_file(out / "lakes.gpkg", layer="lake_regions")
+    if not LABELS.exists():
+        LABELS.parent.mkdir(parents=True, exist_ok=True)
+        labels.empty_labels(LABELS, comp.CRS)
+    n = 2 * len(sets["test"] + sets["val"])
+    typer.echo(
+        f"test={len(sets['test'])} val={len(sets['val'])} train={len(sets['train'])}; {n} lake-years -> {out}"
+    )
 
 
 def _group(lock: list[dict]) -> dict:
