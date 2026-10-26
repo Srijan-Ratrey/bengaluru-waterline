@@ -1,0 +1,8 @@
+data/*
+!data/scenes.lock.json
+!data/labels/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
