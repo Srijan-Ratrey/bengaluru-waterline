@@ -3,6 +3,7 @@
 from concurrent.futures import ThreadPoolExecutor
 
 import odc.stac
+import planetary_computer as pc
 import rasterio
 import xarray as xr
 from odc.geo.geobox import GeoBox
@@ -32,7 +33,7 @@ def composite(items: list, offsets: list[int], geom_utm, buffer_m: float = 150) 
     def read_scene(item_offset):
         item, offset = item_offset
         ds = odc.stac.load(
-            [item],
+            [pc.sign(item)],  # signs per read; pc caches tokens and renews them before expiry
             bands=BANDS + ["SCL"],
             crs=CRS,
             resolution=RES,

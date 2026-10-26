@@ -13,8 +13,8 @@ from skimage.io import imsave
 from lakewatch import composite as comp
 from lakewatch import dynworld, stac
 from lakewatch import lakes as lakes_mod
-from lakewatch.indices import area_ha, mndwi, threshold
 from lakewatch.indices import measure as measure_lake_year
+from lakewatch.indices import mndwi
 
 app = typer.Typer(no_args_is_help=True)
 AOI = Path("configs/aoi.geojson")
@@ -51,32 +51,34 @@ def lock(years: str = "2018-2025", max_cloud: float = 50):
 
 
 @app.command()
-def preview(lake: str, year: int, season: str = "winter", out: Path = Path("data/preview")):
-    """Composite + MNDWI/Otsu water mask for one lake-year; writes a PNG (RGB | mask)."""
-    g = gpd.read_file(LAKES).set_index("lake_id").to_crs("EPSG:32643")
-    rows = [r for r in json.loads(LOCK.read_text()) if r["year"] == year and r["season"] == season]
-    lake_ll = g.to_crs(4326).geometry[lake]
-    pairs = [
-        (it, r["boa_offset"])
-        for r, it in zip(rows, stac.fetch_items([r["id"] for r in rows]))
-        if shapely.geometry.shape(it.geometry).intersects(lake_ll)
-    ]
-    c = comp.composite([it for it, _ in pairs], [o for _, o in pairs], g.geometry[lake])
-    idx = mndwi(c)
-    t = threshold(idx, c["inside"])
-    water = (idx > t) & c["inside"]
-    typer.echo(
-        f"{g.name[lake]} {year} {season}: {area_ha(water):.1f} ha water (OSM {g.area_ha[lake]:.1f} ha), "
-        f"otsu={t:.3f} n_scenes={c.n_scenes} valid_frac={c.valid_frac:.2f}"
-    )
-    rgb = np.clip(np.stack([c["B04"], c["B03"], c["B02"]], -1) / 0.3, 0, 1)
-    rgb = np.nan_to_num(rgb)
-    mask_img = np.where(np.asarray(water)[..., None], [0.1, 0.4, 1.0], rgb * 0.5)
-    mask_img[~np.asarray(c["inside"])] *= 0.3
+def sheet(
+    only: str = typer.Option("", help="Comma-separated lake_ids (default: all)"),
+    out: Path = Path("data/sheets"),
+):
+    """Per-lake PNG from cached composites: rows = true colour, MNDWI>0, DW>=0.5; one column per year."""
+    names = gpd.read_file(LAKES).set_index("lake_id")["name"]
     out.mkdir(parents=True, exist_ok=True)
-    path = out / f"{lake}_{year}_{season}.png"
-    imsave(path, (np.concatenate([rgb, mask_img], 1) * 255).astype("uint8"))
-    typer.echo(f"-> {path}")
+    for lake in only.split(",") if only else names.index:
+        cols = []
+        for path in sorted(COMPOSITES.glob(f"{lake}_*.tif")):
+            c = comp.load(path)
+            inside = c["inside"].values[..., None]
+            rgb = np.nan_to_num(np.clip(np.stack([c["B04"], c["B03"], c["B02"]], -1) / 0.3, 0, 1))
+            dim = np.where(inside, rgb * 0.5, rgb * 0.15)
+            blue = np.array([0.1, 0.4, 1.0])
+            masks = [
+                (mndwi(c).values > 0) & c["inside"].values,
+                (c["dw_water"].values >= 0.5) & c["inside"].values,
+            ]
+            tiles = [rgb] + [np.where(m[..., None], blue, dim) for m in masks]
+            cols.append(
+                np.concatenate([np.pad(t, ((2, 2), (2, 2), (0, 0)), constant_values=1) for t in tiles], 0)
+            )
+        if not cols:
+            continue
+        dst = out / f"{lake}.png"
+        imsave(dst, (np.concatenate(cols, 1) * 255).astype("uint8"), check_contrast=False)
+        typer.echo(f"{names[lake]} ({len(cols)} years) -> {dst}")
 
 
 @app.command()

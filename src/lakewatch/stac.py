@@ -13,8 +13,8 @@ COLLECTION = "sentinel-2-l2a"
 SEASONS = {"winter": ("01-01", "02-28")}
 
 
-def client():
-    return pystac_client.Client.open(CATALOG, modifier=pc.sign_inplace)
+def client(signed: bool = True):
+    return pystac_client.Client.open(CATALOG, modifier=pc.sign_inplace if signed else None)
 
 
 def parse_boa_offset(xml: str) -> int:
@@ -61,8 +61,8 @@ def lock(aoi: dict, years: range, max_cloud: float = 50) -> list[dict]:
 
 
 def fetch_items(ids: list[str]):
-    """Re-fetch (and sign) locked items by ID."""
-    items = {it.id: it for it in client().search(collections=[COLLECTION], ids=ids).items()}
+    """Re-fetch locked items by ID, unsigned: SAS tokens expire after ~1 h, so sign right before reading."""
+    items = {it.id: it for it in client(signed=False).search(collections=[COLLECTION], ids=ids).items()}
     missing = set(ids) - set(items)
     assert not missing, f"locked items no longer in catalog: {sorted(missing)[:5]}"
     return [items[i] for i in ids]
