@@ -1,0 +1,34 @@
+[project]
+name = "lakewatch"
+version = "0.1.0"
+description = "Satellite lake-extent tracker for Bengaluru (Sentinel-2)"
+authors = [
+    { name = "Srijan Ratrey", email = "48729738+Srijan-Ratrey@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "geopandas>=1.2.0",
+    "odc-stac>=0.5.3",
+    "osmnx>=2.1.1",
+    "planetary-computer>=1.0.0",
+    "pystac-client>=0.9.1",
+    "scikit-image>=0.26.0",
+    "typer>=0.27.3",
+    "xarray>=2026.9.0",
+]
+
+[project.scripts]
+lakewatch = "lakewatch.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.10.4,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
+
+[tool.ruff]
+line-length = 110

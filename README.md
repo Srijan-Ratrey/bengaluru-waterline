@@ -4,12 +4,29 @@ Satellite lake-extent tracker for Bengaluru. Measures per-lake yearly water area
 
 Full spec: [lakewatch-tech-spec.md](lakewatch-tech-spec.md)
 
+## Quickstart
+
+```sh
+uv sync
+uv run lakewatch lakes                                   # OSM -> configs/lakes.geojson (committed, pinned)
+uv run lakewatch lock                                    # -> data/scenes.lock.json + clear-day counts
+uv run lakewatch preview r19751547 2024 --season winter  # Bellandur composite + MNDWI/Otsu mask PNG
+uv run pytest
+```
+
+## Findings so far (verified 2026-10-26)
+
+- **Reflectance offset** is not in Planetary Computer's STAC `raster:bands`; it is only in each item's `product-metadata` XML (`BOA_ADD_OFFSET`). The lock has 257 items with offset 0 and 271 with -1000, so it is read per item and stored in the lock.
+- **SCL** asset is `SCL` (20 m). Class codes are not in the metadata; ESA's standard codes are used.
+- **Clear days** (tile cloud < 20%) per candidate window, 2017-2025: winter (Jan-Feb) 7-11/yr, pre-monsoon (Mar-mid May) 8-14/yr, post-monsoon (mid Oct-Dec) 2-4/yr. 2017 has only 2-4 in every window.
+- **Lakes:** 222 named OSM candidates of at least 2 ha; 36 picked, 12 per size bin (2-10, 10-50, 50+ ha). Check the boundaries of "Vrishabhavati" and "Nagarbhavi Thorai" (D2).
+
 ## Decisions (as of 2026-10-26)
 
 | ID | Decision |
 |---|---|
 | D1 | 25–40 lakes, mixed size and condition, minimum ~2 ha |
-| D3 | 2017 to latest; one same-season window, chosen after counting valid scenes |
+| D3 | 2018 to 2025, winter (Jan-Feb) window only. 2017 dropped (2-4 clear days); post-monsoon dropped (2-4/yr) |
 | D4 | Indices + U-Net (U-Net built regardless of index results) |
 | D9 | Planetary Computer for Sentinel-2 (Dynamic World still via Earth Engine) |
 | D10 | CLI + library |
