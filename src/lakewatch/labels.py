@@ -42,4 +42,7 @@ def empty_labels(path, crs) -> None:
     """GeoPackage layer to draw in: one polygon per patch, with lake_id, year, class, annotator."""
     cols = {"lake_id": pd.Series(dtype=str), "year": pd.Series(dtype=int),
             "class": pd.Series(dtype=str), "annotator": pd.Series(dtype=str)}  # fmt: skip
-    gpd.GeoDataFrame(cols, geometry=gpd.GeoSeries([], crs=crs)).to_file(path, layer="labels", driver="GPKG")
+    # Explicit type: an empty layer otherwise gets geometry "Unknown" and QGIS opens it as a plain table.
+    gpd.GeoDataFrame(cols, geometry=gpd.GeoSeries([], crs=crs)).to_file(
+        path, layer="labels", driver="GPKG", geometry_type="Polygon"
+    )

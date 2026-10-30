@@ -22,9 +22,11 @@ Draw polygons in `labels` with `class` set to one of:
 | class | what | where |
 |---|---|---|
 | `water` | open water surface you can see | anywhere inside `lake_regions` |
-| `veg` | any vegetation surface: floating weeds, reeds, grass, trees | inside `lakes` (the boundary) only |
+| `veg` | any vegetation surface: floating weeds, reeds, grass, trees, islands | inside or touching `lakes` (the boundary); it gets clipped to the boundary |
 
 Leave everything else undrawn; it counts as **land** (bare soil, construction, roads, buildings).
+
+**Overlaps are fine: where `veg` and `water` overlap, `veg` wins.** So trace the water's outer edge in one polygon and draw islands and weed patches on top, without cutting holes.
 
 **Reading the images:**
 - `swir` (SWIR-NIR-Red): water is black or very dark blue; vegetation is bright green; bare and built land is pink, purple or brown. Use it first.
