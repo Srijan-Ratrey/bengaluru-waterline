@@ -7,3 +7,5 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 cache/
+*.gpkg-shm
+*.gpkg-wal
