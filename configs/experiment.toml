@@ -13,3 +13,15 @@ interval_coverage_tolerance_pp = 10      # observed coverage must be within +/-1
 # 3-class (water / veg / land) per-class IoU on test lakes is reported for all lakes.
 # Its pass/fail target is set from the val pilot and appended here BEFORE test evaluation.
 # Trend-sign agreement (2018 vs 2025 labelled area change) is reported, no target.
+# 3-class targets, appended 2026-11-13 from the val pilot (pooled IoU over the lake polygon: water 0.73,
+# veg 0.70, land 0.33), before any test scoring. Val minus ~0.1 to allow for lake-to-lake spread.
+three_class_iou_water_min = 0.65
+three_class_iou_veg_min = 0.60
+# Land: reported, no target. Few land pixels per lake and the grass-vs-dry-bed boundary is the fuzziest label.
+
+[method]
+# Chosen on val lakes only (`lakewatch evaluate val`, grid in data/eval_val_grid.parquet), 2026-11-13.
+method = "mndwi"   # pre-registered default kept: lowest val median |rel area error| of all methods (0.14; DW 0.5: 0.22)
+water_t = 0.0      # water = MNDWI > 0
+veg_t = 0.5        # veg = NDVI > 0.5 inside the lake, not water; best pooled 3-class IoU on val (0.59 vs 0.51 at 0.3)
+delta = 0.2        # area_lo/hi = area at MNDWI > +/-0.2, -/+ shoreline x 5 m; smallest delta with val coverage ~0.9

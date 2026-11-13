@@ -1,12 +1,14 @@
+import geopandas as gpd
 import numpy as np
 import pandas as pd
+import shapely
 import xarray as xr
 from odc.geo.geobox import GeoBox
 from odc.geo.xr import xr_coords
 
 from lakewatch.composite import load, save, to_reflectance
-from lakewatch.indices import area_ha, measure, mndwi, ndwi, threshold
-from lakewatch.labels import split
+from lakewatch.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
+from lakewatch.labels import LAND, VEG, WATER, rasterize, split
 from lakewatch.stac import parse_boa_offset
 
 
@@ -80,6 +82,29 @@ def test_save_load_roundtrip(tmp_path):
     assert back.attrs == c.attrs
     np.testing.assert_array_equal(back["lake"], c["lake"])
     np.testing.assert_allclose(back["B03"], c["B03"])
+
+
+def test_rasterize_veg_clipped_to_lake_and_wins_over_water():
+    c, _ = _toy_composite()  # lake polygon = left two columns
+    polys = gpd.GeoDataFrame(
+        {"class": ["water", "veg"]},
+        geometry=[
+            shapely.box(0, 0, 40, 20),
+            shapely.box(0, 0, 40, 40),
+        ],  # water: bottom half; veg: everything
+        crs="EPSG:32643",
+    )
+    t = rasterize(polys, c)
+    assert (t[:, :2] == VEG).all()  # veg inside the lake beats water
+    assert (t[2:, 2:] == WATER).all() and (t[:2, 2:] == LAND).all()  # outside the lake veg is dropped
+
+
+def test_area_interval():
+    idx = np.array([[0.5, 0.1, -0.1, -0.5]] * 2)
+    inside = np.ones(idx.shape, bool)
+    assert edge_ha(idx > 0) == 2 * 10 * 5 / 10_000  # two vertical pixel edges along the shoreline
+    area, lo, hi = area_interval(idx, inside, 0.0, 0.2)
+    assert (area, lo, hi) == (0.04, 0.02 - 0.01, 0.06 + 0.01)
 
 
 def test_split_is_disjoint_and_covers_all_lakes():

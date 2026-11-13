@@ -34,6 +34,21 @@ def area_ha(water) -> float:
     return float(np.asarray(water).sum()) * PIXEL_HA
 
 
+def edge_ha(water, edge_m: float = 5) -> float:
+    """Mixed-pixel area: shoreline length (4-neighbour water/non-water pixel edges x 10 m) x edge_m (spec 7)."""
+    w = np.asarray(water, int)
+    n = np.abs(np.diff(w, axis=0)).sum() + np.abs(np.diff(w, axis=1)).sum()
+    return float(n) * 10 * edge_m / 10_000
+
+
+def area_interval(index, inside, t: float, delta: float) -> tuple[float, float, float]:
+    """(area, lo, hi) in ha: area at threshold t; lo/hi at t +/- delta, widened by the edge term."""
+    water = (index > t) & inside
+    edge = edge_ha(water)
+    lo = max(0.0, area_ha((index > t + delta) & inside) - edge)
+    return area_ha(water), lo, area_ha((index > t - delta) & inside) + edge
+
+
 def iou(a, b) -> float:
     union = (a | b).sum()
     return float((a & b).sum() / union) if union else np.nan

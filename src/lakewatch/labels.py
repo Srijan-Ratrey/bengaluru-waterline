@@ -4,11 +4,14 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 import rasterio
+import shapely
+from rasterio.features import geometry_mask
 
 from lakewatch.lakes import SIZE_BINS
 
 LABEL_YEARS = (2018, 2025)  # series endpoints, fixed before any labels exist
 CLASSES = ("water", "veg")  # drawn as polygons; anything else inside the lake region is land
+LAND, WATER, VEG = 0, 1, 2
 # 6 test / 4 val / 7 train per 17 lakes walked in stratum order -> 12/8/14 for 34 lakes.
 PATTERN = ["test", "train", "val", "test", "train", "test", "train", "val", "test",
            "train", "test", "train", "val", "test", "train", "val", "train"]  # fmt: skip
@@ -36,6 +39,20 @@ def export_8bit(c, bands: list[str], scale: float, path) -> None:
         crs=gb.crs.to_wkt(), transform=gb.affine, photometric="RGB",
     ) as dst:  # fmt: skip
         dst.write(arr)
+
+
+def rasterize(polys: gpd.GeoDataFrame, c) -> np.ndarray:
+    """Hand-label polygons of one lake-year -> uint8 LAND/WATER/VEG on composite `c`'s grid.
+
+    Veg is clipped to the lake polygon, then wins over water (docs/LABELLING.md). Pixel-centre rule."""
+    gb = c.odc.geobox
+    out = np.full(gb.shape, LAND, "uint8")
+    for cls, val, clip in (("water", WATER, None), ("veg", VEG, c["lake"].values)):
+        geoms = [shapely.make_valid(g) for g in polys.geometry[polys["class"] == cls]]
+        if geoms:
+            m = geometry_mask(geoms, gb.shape, gb.affine, invert=True)
+            out[m if clip is None else m & clip] = val
+    return out
 
 
 def empty_labels(path, crs) -> None:

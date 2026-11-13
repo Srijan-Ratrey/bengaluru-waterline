@@ -1,5 +1,6 @@
 import datetime as dt
 import json
+import tomllib
 from collections import Counter
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from skimage.io import imsave
 
 from lakewatch import composite as comp
 from lakewatch import dynworld, labels, stac
+from lakewatch import evaluate as evaluation
 from lakewatch import lakes as lakes_mod
 from lakewatch.indices import measure as measure_lake_year
 from lakewatch.indices import mndwi
@@ -24,6 +26,7 @@ COMPOSITES = Path("data/composites")
 OBS = Path("data/observations.parquet")
 SPLIT = Path("configs/split.json")
 LABELS = Path("data/labels/labels.gpkg")
+EXPERIMENT = Path("configs/experiment.toml")
 
 
 @app.command()
@@ -166,6 +169,35 @@ def label_prep(out: Path = Path("data/labelling"), seed: int = 0):
     typer.echo(
         f"test={len(sets['test'])} val={len(sets['val'])} train={len(sets['train'])}; {n} lake-years -> {out}"
     )
+
+
+@app.command()
+def evaluate(subset: str = typer.Argument("val", help="val or test")):
+    """Score every method x threshold against the hand labels of one split -> data/eval_<subset>.parquet."""
+    exp = tomllib.loads(EXPERIMENT.read_text())
+    if subset == "test" and "three_class_iou_water_min" not in exp["criteria"]:
+        raise typer.BadParameter("freeze the 3-class target in configs/experiment.toml before scoring test")
+    sets = json.loads(SPLIT.read_text())
+    polys = gpd.read_file(LABELS, layer="labels")
+    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    grid, rows = [], []
+    for lake in sets[subset]:
+        for year in labels.LABEL_YEARS:
+            c = comp.load(COMPOSITES / f"{lake}_{year}_winter.tif")
+            truth = labels.rasterize(polys[(polys.lake_id == lake) & (polys.year == year)], c)
+            key = {"lake_id": lake, "year": year}
+            if subset == "val":  # threshold grid for tuning; never computed on test
+                grid += [key | r for r in evaluation.score_lake_year(c, truth)]
+            rows.append(key | evaluation.assess(c, truth, **exp["method"]))
+    if grid:
+        pd.DataFrame(grid).to_parquet(f"data/eval_{subset}_grid.parquet", index=False)
+    a = pd.DataFrame(rows).assign(
+        type=lambda d: np.where(d.lake_id.map(veg) > exp["veg_lake_cutoff"], "veg", "clean")
+    )
+    a.to_parquet(f"data/eval_{subset}.parquet", index=False)
+    typer.echo(a[["lake_id", "year", "type", "area_true", "area", "area_lo", "area_hi"]].round(2).to_string())
+    for k, v in evaluation.summary(a).items():
+        typer.echo(f"{k:32} {v:.3f}")
 
 
 def _group(lock: list[dict]) -> dict:
