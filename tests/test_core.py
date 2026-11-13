@@ -10,6 +10,7 @@ from lakewatch.composite import load, save, to_reflectance
 from lakewatch.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
 from lakewatch.labels import LAND, VEG, WATER, rasterize, split
 from lakewatch.stac import parse_boa_offset
+from lakewatch.trends import trends
 
 
 def test_boa_offset_from_product_xml():
@@ -119,3 +120,17 @@ def test_split_is_disjoint_and_covers_all_lakes():
     s = split(lakes)
     assert [len(s[k]) for k in ("test", "val", "train")] == [12, 8, 14]
     assert sorted(s["test"] + s["val"] + s["train"]) == sorted(lakes["lake_id"])
+
+
+def test_trends_flag_only_clear_monotonic_change():
+    years = np.arange(2018, 2026)
+    a = pd.concat(
+        [
+            pd.DataFrame({"lake_id": "down", "year": years, "area": 20.0 - 2 * (years - 2018)}),
+            pd.DataFrame({"lake_id": "flat", "year": years, "area": 5.0}),
+            pd.DataFrame({"lake_id": "noisy", "year": years, "area": [3.0, 9, 1, 8, 2, 9, 1, 8]}),
+        ]
+    )
+    t = trends(a, "area").set_index("lake_id")
+    assert t.loc["down", "slope"] == -2 and t.loc["down", "verdict"] == "shrinking"
+    assert t.loc["flat", "verdict"] == "no clear trend" and t.loc["noisy", "verdict"] == "no clear trend"

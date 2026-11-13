@@ -12,7 +12,7 @@ import typer
 from skimage.io import imsave
 
 from lakewatch import composite as comp
-from lakewatch import dynworld, labels, stac
+from lakewatch import dynworld, labels, stac, trends
 from lakewatch import evaluate as evaluation
 from lakewatch import lakes as lakes_mod
 from lakewatch.indices import measure as measure_lake_year
@@ -198,6 +198,29 @@ def evaluate(subset: str = typer.Argument("val", help="val or test")):
     typer.echo(a[["lake_id", "year", "type", "area_true", "area", "area_lo", "area_hi"]].round(2).to_string())
     for k, v in evaluation.summary(a).items():
         typer.echo(f"{k:32} {v:.3f}")
+
+
+@app.command("trends")
+def trends_cmd(alpha: float = 0.1):
+    """Areas for every lake x year at the frozen method -> data/areas.parquet; per-lake trends -> data/trends.parquet."""
+    cfg = tomllib.loads(EXPERIMENT.read_text())["method"]
+    names = gpd.read_file(LAKES).set_index("lake_id")["name"]
+    rows = [
+        {"lake_id": lake, "year": int(p.stem.split("_")[1])} | trends.areas(comp.load(p), **cfg)
+        for lake in names.index
+        for p in sorted(COMPOSITES.glob(f"{lake}_*_winter.tif"))
+    ]
+    a = pd.DataFrame(rows)
+    a.to_parquet("data/areas.parquet", index=False)
+    w, v = trends.trends(a, "area", alpha), trends.trends(a, "veg_ha", alpha)
+    t = w.merge(v[["lake_id", "slope", "q", "verdict"]], on="lake_id", suffixes=("", "_veg"))
+    first, last = (a[a.year == y].set_index("lake_id")["area"] for y in (a.year.min(), a.year.max()))
+    t = t.assign(name=t.lake_id.map(names), area_first=t.lake_id.map(first), area_last=t.lake_id.map(last))
+    t.to_parquet("data/trends.parquet", index=False)
+    cols = ["name", "area_first", "area_last", "slope", "slope_lo", "slope_hi", "q", "verdict", "verdict_veg"]
+    typer.echo(t.sort_values("slope")[cols].round(2).to_string(index=False))
+    typer.echo(f"\nwater (q < {alpha}, Benjamini-Hochberg): {t.verdict.value_counts().to_dict()}")
+    typer.echo(f"veg:   {t.verdict_veg.value_counts().to_dict()}")
 
 
 def _group(lock: list[dict]) -> dict:

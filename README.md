@@ -39,6 +39,15 @@ uv run pytest
 - **Dynamic World** is the best single method on large clean lakes (Madiwala IoU 0.92-0.94) but misses most of weed-margined Hosakote 2018 (21 vs 207 ha).
 - **Limits:** one annotator (no agreement ceiling yet), 3 clean val lakes, small lakes dominate the interval width.
 
+## Trends 2018-2025 (2026-11-13)
+
+`uv run lakewatch trends` -> `data/areas.parquet` (per lake-year: water area with `area_lo`/`area_hi`, and water/veg/land ha inside the lake) and `data/trends.parquet`. Per lake: Theil-Sen slope with scipy's rank-based 90% CI (used instead of a bootstrap: 8 points is too few to resample), Mann-Kendall p (Kendall tau vs year), Benjamini-Hochberg q across the 34 lakes, verdict at q < 0.1.
+
+- **Open water:** 2 lakes shrinking (Gattahalli -1.5 ha/yr, Hommadevanahalli -0.3 ha/yr), 1 growing (Horamavu Agara +1.8 ha/yr), **31 no clear trend**.
+- **Vegetation inside the lake:** 1 growing (Gattahalli), 33 no clear trend.
+- **Why so few:** 8 winters is low power, and year-to-year swings are large (Hosakote: 180, 24, 25, 22, 233, 257, 235, 22 ha). "No clear trend" means the data can't tell, not that a lake is stable.
+- Caveats: areas carry the test-set undercount of dark water (above); per-year intervals are not propagated into the slope CI; extent only, no causes.
+
 ## Findings so far (verified 2026-10-26)
 
 - **Reflectance offset** is not in Planetary Computer's STAC `raster:bands`; it is only in each item's `product-metadata` XML (`BOA_ADD_OFFSET`). The lock has 257 items with offset 0 and 271 with -1000, so it is read per item and stored in the lock.
