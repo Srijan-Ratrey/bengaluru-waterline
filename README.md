@@ -14,10 +14,30 @@ export EE_PROJECT=<your-earth-engine-project>          # free non-commercial pro
 uv run lakewatch measure                                 # all lakes x years -> data/observations.parquet
 uv run lakewatch sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
 uv run lakewatch label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
+uv run lakewatch evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
 uv run pytest
 ```
 
 `measure` caches one GeoTIFF per lake-year in `data/composites/` (bands B02-B11 median reflectance, `n_valid`, `inside`/`lake` masks, `dw_water`); open them in QGIS for hand labelling.
+
+## Validation against hand labels (2026-11-13)
+
+40 hand-labelled lake-years (20 lakes x 2018, 2025; one annotator). Settings were chosen on the 8 val lakes and frozen in [configs/experiment.toml](configs/experiment.toml) before the 12 test lakes were scored, once. Method: water = MNDWI > 0, veg = NDVI > 0.5 inside the lake, everything else land.
+
+| | val (16) | **test (24)** | frozen target | test |
+|---|---|---|---|---|
+| Median relative area error, clean lakes | 0.13 | **0.24** | <= 0.10 | **fail** |
+| Median relative area error, vegetated lakes | 0.30 | **0.25** | reported | |
+| Interval coverage (nominal 0.90) | 0.88 | **0.83** | 0.80-1.00 | pass |
+| Pooled IoU, water | 0.73 | **0.78** | >= 0.65 | pass |
+| Pooled IoU, veg | 0.70 | **0.74** | >= 0.60 | pass |
+| Pooled IoU, land | 0.33 | **0.46** | reported | |
+| 2018 -> 2025 change direction correct | 6/8 | **7/12** | reported | |
+
+- **MNDWI undercounts dark water.** On the worst test lake-years (Bagaluru 2025: 37.7 vs 56.1 ha; Chudahalli 2018; Budigere 2018), the missed water pixels have low NIR (0.02-0.03, i.e. water) but SWIR (~0.05) above green (~0.03), so MNDWI goes negative. Dynamic World gives them p 0.45-0.65. Val already showed the same bias (median -13% at MNDWI > 0). Not fixed post hoc: any fix has to be re-validated on new labelled lakes.
+- **Kogilu 2018** (8.2 ha labelled, 0.8 ha by MNDWI): missed pixels have NDVI 0.37, i.e. vegetation-tinged water.
+- **Dynamic World** is the best single method on large clean lakes (Madiwala IoU 0.92-0.94) but misses most of weed-margined Hosakote 2018 (21 vs 207 ha).
+- **Limits:** one annotator (no agreement ceiling yet), 3 clean val lakes, small lakes dominate the interval width.
 
 ## Findings so far (verified 2026-10-26)
 
