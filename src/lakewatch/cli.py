@@ -252,7 +252,9 @@ def site(out: Path = Path("site")):
             | {"labelled": [truth.get((lake, y)) for y in s.year]}
         )  # fmt: skip
     (out / "data.js").write_text("const DATA = " + json.dumps(lakes, allow_nan=False) + ";\n")
-    typer.echo(f"{len(lakes)} lakes -> {out}; open {out / 'index.html'}")
+    typer.echo(
+        f"{len(lakes)} lakes -> {out}; view: uv run python -m http.server -d {out}, then http://localhost:8000"
+    )
 
 
 def _overlays(c, cfg: dict, stem: Path) -> list:

@@ -16,7 +16,8 @@ uv run lakewatch sheet                                   # per-lake PNG: years x
 uv run lakewatch label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
 uv run lakewatch evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
 uv run lakewatch trends                                  # per-lake areas + trends at the frozen method
-uv run lakewatch site                                    # demo data -> site/; then open site/index.html
+uv run lakewatch site                                    # demo data -> site/
+uv run python -m http.server -d site                     # then open http://localhost:8000 (not the file directly: OSM blocks file:// map tiles)
 uv run pytest
 ```
 
@@ -52,7 +53,7 @@ uv run pytest
 
 ## Demo site (2026-11-14)
 
-`site/index.html` is a static page that needs no server; `lakewatch site` writes its data (`site/data.js`, `site/img/`, 3.5 MB, gitignored until D12 is settled). It shows:
+`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `lakewatch site` writes its data (`site/data.js`, `site/img/`, 3.5 MB, gitignored until D12 is settled). It shows:
 
 - a map with a winter year slider, overlaying each lake's Sentinel-2 true-colour composite and the frozen water/veg map;
 - lake outlines coloured by trend verdict;
