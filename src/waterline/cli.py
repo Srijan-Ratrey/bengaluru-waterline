@@ -269,6 +269,11 @@ def site(out: Path = Path("site")):
             | {"labelled": [truth.get((lake, y)) for y in s.year]}
         )  # fmt: skip
     (out / "data.js").write_text("const DATA = " + json.dumps(lakes, allow_nan=False) + ";\n")
+    # Same numbers as downloadable CSVs (CC BY 4.0), linked from the site's About box.
+    csv = a.sort_values(["lake_id", "year"]).round(3)
+    csv.insert(1, "name", csv.lake_id.map(g.name))
+    csv.to_csv(out / "areas.csv", index=False)
+    t.to_csv(out / "trends.csv")
     typer.echo(
         f"{len(lakes)} lakes -> {out}; view: uv run python -m http.server -d {out}, then http://localhost:8000"
     )

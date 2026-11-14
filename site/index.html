@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bengaluru Waterline</title>
 <meta name="description" content="Open water and weed cover of Bengaluru lakes from Sentinel-2, every winter 2018-2025, with uncertainty and hand-labelled validation.">
+<link rel="canonical" href="https://srijan-ratrey.github.io/bengaluru-waterline/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%233987e5'/></svg>">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://srijan-ratrey.github.io/bengaluru-waterline/">
+<meta property="og:title" content="Bengaluru Waterline">
+<meta property="og:description" content="How much open water and weed cover 44 Bengaluru lakes had every winter since 2018, from Sentinel-2, with error ranges checked against hand-labelled lakes.">
+<meta property="og:image" content="https://srijan-ratrey.github.io/bengaluru-waterline/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -198,7 +206,11 @@
   <h3>Credits</h3>
   <p class="note">Contains modified Copernicus Sentinel data 2018-2025, accessed through Microsoft Planetary Computer.
     Lake outlines and basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors (ODbL).
-    Code MIT; Bengaluru Waterline data CC BY 4.0. Methods, validation and limitations are documented in the project repository.</p>
+    Code MIT; Bengaluru Waterline data CC BY 4.0.</p>
+  <h3>Data and source</h3>
+  <p class="note">Download the numbers: <a href="areas.csv" download>areas.csv</a> (every lake and winter, with ranges) ·
+    <a href="trends.csv" download>trends.csv</a> (per-lake trends). Code, methods, validation and limitations:
+    <a href="https://github.com/Srijan-Ratrey/bengaluru-waterline">github.com/Srijan-Ratrey/bengaluru-waterline</a>.</p>
 </dialog>
 
 <script>
@@ -261,13 +273,15 @@ function stop() { clearInterval(timer); timer = null; $("playIcon").innerHTML = 
 $("play").onclick = () => {
   if (timer) return stop();
   $("playIcon").innerHTML = PAUSE; $("play").ariaLabel = "Pause";
+  warm();
   if (yi() === YEARS.length - 1) setYear(YEARS[0]);
   timer = setInterval(() => setYear(YEARS[(yi() + 1) % YEARS.length]), 1100);
 };
-// warm the browser cache so playback doesn't flicker
-addEventListener("load", () => setTimeout(() => DATA.forEach(l => YEARS.forEach(y => {
+// warm the browser cache on first play so playback doesn't flicker (not on load: ~3 MB for all years)
+let warmed = false;
+const warm = () => warmed || (warmed = true, DATA.forEach(l => YEARS.forEach(y => {
   new Image().src = `img/${l.id}_${y}_rgb.webp`; new Image().src = `img/${l.id}_${y}_cls.png`;
-})), 800));
+})));
 
 /* ---------- sidebar: lake list ---------- */
 const counts = DATA.reduce((c, l) => (c[l.verdict] = (c[l.verdict] || 0) + 1, c), {});
@@ -294,7 +308,7 @@ function listView() {
     </div>
     <div>${rows.map(l => `
       <button class="lake-row" data-id="${l.id}">
-        <span><div class="nm">${esc(l.name)}</div><div class="sub">${chip(l.verdict)}${l.flags.length ? " ⚠" : ""}</div></span>
+        <span><div class="nm">${esc(l.name)}</div><div class="sub">${chip(l.verdict)}${l.flags.length ? ' <span role="img" aria-label="lower confidence" title="Lower confidence">⚠</span>' : ""}</div></span>
         ${spark(l)}
         <span class="val">${ha(l.area[yi()])}<small>ha · ${year}</small></span>
       </button>`).join("") || '<div class="empty">No lakes match.</div>'}</div>`;
@@ -380,6 +394,7 @@ function drawChart(l) {
 /* ---------- glue ---------- */
 function render() {
   const l = byId[selected];
+  $("yearBig").hidden = !!l;  // zoomed in, it would sit on the lake imagery; the timeline shows the year
   if (l) {
     $("side").innerHTML = detailView(l); drawChart(l);
     $("back").onclick = () => select(null);
@@ -401,9 +416,10 @@ function render() {
 function select(id, zoom) {
   const prev = selected; selected = id;
   for (const k of [prev, id]) if (k) ov[k].line.setStyle(outlineStyle(k));
-  history.replaceState(null, "", id ? `#${id}` : location.pathname);
-  if (id && zoom) map.flyToBounds(byId[id].bounds, { padding: [40, 40], duration: .8 });
-  if (!id) map.flyToBounds(outlineLayer.getBounds(), { padding: [30, 30], duration: .8 });
+  if (location.hash.slice(1) !== (id || "")) history.pushState(null, "", id ? `#${id}` : location.pathname);
+  const animate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (id && zoom) map.flyToBounds(byId[id].bounds, { padding: [40, 40], duration: .8, animate });
+  if (!id) map.flyToBounds(outlineLayer.getBounds(), { padding: [30, 30], duration: .8, animate });
   render();
   $("side").scrollTop = 0;
 }
@@ -416,6 +432,8 @@ addEventListener("keydown", e => {
   if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("play").click(); }
   if (e.key === "Escape" && selected) select(null);
 });
+// back/forward between lakes (and hand-edited #ids)
+addEventListener("popstate", () => { const id = location.hash.slice(1); select(byId[id] ? id : null, true); });
 setYear(year);
 if (byId[location.hash.slice(1)]) select(location.hash.slice(1), true);
 </script>
