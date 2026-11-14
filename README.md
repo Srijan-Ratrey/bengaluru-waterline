@@ -1,6 +1,14 @@
 # Bengaluru Waterline
 
-How much open water and weed cover Bengaluru's lakes have, every winter since 2018, from Sentinel-2. Every number has an error range, and the method is validated against hand-labelled lakes it was never tuned on. (Formerly LakeWatch; renamed 2026-11-14 to avoid confusion with Namma Lakes / Bangalore Lake Watch.)
+How much open water and weed cover Bengaluru's lakes have, every winter since 2018, from Sentinel-2. Every number has an error range, and the method is validated against hand-labelled lakes it was never tuned on.
+
+### [🗺️ Explore the live map →](https://srijan-ratrey.github.io/bengaluru-waterline/)
+
+[![Bengaluru Waterline: Bellandur Lake, 2025. Open water in blue, vegetation in green, with its 2018-2025 area chart](docs/img/screenshot.jpg)](https://srijan-ratrey.github.io/bengaluru-waterline/)
+
+44 lakes · 2018-2025 · water and vegetation per lake and winter, with error ranges · data as CSV: [areas](https://srijan-ratrey.github.io/bengaluru-waterline/areas.csv), [trends](https://srijan-ratrey.github.io/bengaluru-waterline/trends.csv) (CC BY 4.0)
+
+(Formerly LakeWatch; renamed 2026-11-14 to avoid confusion with Namma Lakes / Bangalore Lake Watch.)
 
 Docs: [METHODS](docs/METHODS.md) · [VALIDATION](docs/VALIDATION.md) · [LIMITATIONS](docs/LIMITATIONS.md) · [labelling guide](docs/LABELLING.md) · [full spec](lakewatch-tech-spec.md)
 
@@ -56,7 +64,7 @@ uv run pytest
 
 ## Demo site (2026-11-14)
 
-`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `waterline site` writes its data (`site/data.js`, `site/img/`, committed so Pages can serve them). It shows:
+`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `waterline site` writes its data (`site/data.js`, `site/img/`, and the downloadable `site/areas.csv` and `site/trends.csv`; all committed so Pages can serve them). It shows:
 
 - a dark map with year buttons and a play button, overlaying each lake's Sentinel-2 true-colour composite (clipped to the lake region) and the frozen water/veg map;
 - a searchable, sortable lake list with sparklines, and filter tiles by trend verdict;
@@ -65,7 +73,7 @@ uv run pytest
 - a "lakes to read with care" panel listing vegetated lakes (median veg cover > 0.6) and lakes with wide intervals (median interval wider than the area);
 - the test-set misses stated up front.
 
-`#<lake_id>` in the URL opens a lake directly. Live at https://srijan-ratrey.github.io/bengaluru-waterline/ (deployed from `site/` by `.github/workflows/pages.yml`).
+`#<lake_id>` in the URL opens a lake directly, and the browser back button steps between lakes. [Live site](https://srijan-ratrey.github.io/bengaluru-waterline/) (deployed from `site/` by `.github/workflows/pages.yml`).
 
 ## Findings so far (verified 2026-10-26)
 
