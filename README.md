@@ -1,6 +1,6 @@
-# LakeWatch
+# Bengaluru Waterline
 
-Satellite lake-extent tracker for Bengaluru. Measures per-lake yearly water area from Sentinel-2, with uncertainty and held-out-lake validation.
+How much open water and weed cover Bengaluru's lakes have, every winter since 2018, from Sentinel-2. Every number has an error range, and the method is validated against hand-labelled lakes it was never tuned on. (Formerly LakeWatch; renamed 2026-11-14 to avoid confusion with Namma Lakes / Bangalore Lake Watch.)
 
 Docs: [METHODS](docs/METHODS.md) · [VALIDATION](docs/VALIDATION.md) · [LIMITATIONS](docs/LIMITATIONS.md) · [labelling guide](docs/LABELLING.md) · [full spec](lakewatch-tech-spec.md)
 
@@ -8,15 +8,15 @@ Docs: [METHODS](docs/METHODS.md) · [VALIDATION](docs/VALIDATION.md) · [LIMITAT
 
 ```sh
 uv sync
-uv run lakewatch lakes                                   # OSM -> configs/lakes.geojson (committed, pinned)
-uv run lakewatch lock                                    # -> data/scenes.lock.json + clear-day counts
+uv run waterline lakes                                   # OSM -> configs/lakes.geojson (committed, pinned)
+uv run waterline lock                                    # -> data/scenes.lock.json + clear-day counts
 export EE_PROJECT=<your-earth-engine-project>          # free non-commercial project; `uv run earthengine authenticate` once
-uv run lakewatch measure                                 # all lakes x years -> data/observations.parquet
-uv run lakewatch sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
-uv run lakewatch label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
-uv run lakewatch evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
-uv run lakewatch trends                                  # per-lake areas + trends at the frozen method
-uv run lakewatch site                                    # demo data -> site/
+uv run waterline measure                                 # all lakes x years -> data/observations.parquet
+uv run waterline sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
+uv run waterline label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
+uv run waterline evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
+uv run waterline trends                                  # per-lake areas + trends at the frozen method
+uv run waterline site                                    # demo data -> site/
 uv run python -m http.server -d site                     # then open http://localhost:8000 (not the file directly: OSM blocks file:// map tiles)
 uv run pytest
 ```
@@ -44,11 +44,11 @@ uv run pytest
 
 ## Trends 2018-2025 (2026-11-13; 10 lakes added 2026-11-14)
 
-`uv run lakewatch trends` -> `data/areas.parquet` (per lake-year: water area with `area_lo`/`area_hi`, and water/veg/land ha inside the lake) and `data/trends.parquet`. Per lake: Theil-Sen slope with scipy's rank-based 90% CI (used instead of a bootstrap: 8 points is too few to resample), Mann-Kendall p (Kendall tau vs year), Benjamini-Hochberg q across all 44 lakes, verdict at q < 0.1.
+`uv run waterline trends` -> `data/areas.parquet` (per lake-year: water area with `area_lo`/`area_hi`, and water/veg/land ha inside the lake) and `data/trends.parquet`. Per lake: Theil-Sen slope with scipy's rank-based 90% CI (used instead of a bootstrap: 8 points is too few to resample), Mann-Kendall p (Kendall tau vs year), Benjamini-Hochberg q across all 44 lakes, verdict at q < 0.1.
 
 - **Open water:** 2 lakes shrinking (Gattahalli -1.5 ha/yr, Hommadevanahalli -0.3 ha/yr), 1 growing (Horamavu Agara +1.8 ha/yr), **31 no clear trend**.
 - **Vegetation inside the lake:** 1 growing (Gattahalli), 33 no clear trend.
-- **10 lakes added on request** (2026-11-14, `lakewatch add-lakes`): Agara, Hebbal, Jakkur, Rachenahalli, Kaikondrahalli, Sankey Tank, Lalbagh Tank, Puttenahalli (Yelahanka), Yellamallappa Chetty and Muthanalluru. They are well-known lakes the random draw missed, tagged `sample=added` in [configs/lakes.geojson](configs/lakes.geojson), measured only and never labelled.
+- **10 lakes added on request** (2026-11-14, `waterline add-lakes`): Agara, Hebbal, Jakkur, Rachenahalli, Kaikondrahalli, Sankey Tank, Lalbagh Tank, Puttenahalli (Yelahanka), Yellamallappa Chetty and Muthanalluru. They are well-known lakes the random draw missed, tagged `sample=added` in [configs/lakes.geojson](configs/lakes.geojson), measured only and never labelled.
   - All 10 come out as no clear trend for both water and vegetation. The nearest to a verdict is Muthanalluru, at 65 -> 13 ha and -6.5 ha/yr (90% CI -11.3 to -1.2), but q = 0.17.
   - Adding them didn't change any verdict among the 34. The counts above are for the random 34; statements about Bengaluru lakes in general should use only those.
 - **Why so few:** 8 winters is low power, and year-to-year swings are large (Hosakote: 180, 24, 25, 22, 233, 257, 235, 22 ha). "No clear trend" means the data can't tell, not that a lake is stable.
@@ -56,7 +56,7 @@ uv run pytest
 
 ## Demo site (2026-11-14)
 
-`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `lakewatch site` writes its data (`site/data.js`, `site/img/`, 2.6 MB, gitignored until D12 is settled). It shows:
+`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `waterline site` writes its data (`site/data.js`, `site/img/`, 2.6 MB, gitignored until D12 is settled). It shows:
 
 - a dark map with year buttons and a play button, overlaying each lake's Sentinel-2 true-colour composite (clipped to the lake region) and the frozen water/veg map;
 - a searchable, sortable lake list with sparklines, and filter tiles by trend verdict;
@@ -87,7 +87,7 @@ uv run pytest
 | D9 | Planetary Computer for Sentinel-2 (Dynamic World still via Earth Engine) |
 | D10 | CLI + library |
 | D12 | Licence: MIT for code; CC BY 4.0 for derived data and hand labels; lake outlines stay ODbL (see Licence) |
-| D15 | Name: LakeWatch. Checked 2026-11-14: `0x101/lakewatch` (city lake water + algae kit) and `Clnay5/lakewatch` (Sentinel-2 water change, MIT) are similar and same-named. No "first" claims; what sets this one apart is the held-out hand-labelled validation, calibrated intervals and the water/veg/land split |
+| D15 | Name: **Bengaluru Waterline** (2026-11-14; was LakeWatch, too close to Namma Lakes' "Bangalore Lake Watch" and two same-named repos). No "first" claims; what sets it apart is the held-out hand-labelled validation, calibrated intervals, tested trends and the water/veg/land split |
 | D16 | Sentinel-2 only for v1 |
 
 | D5/D6 | Hand labels: 20 lakes (8 val + 12 test) x 2018, 2025, drawn on the Sentinel-2 composites ([guide](docs/LABELLING.md)). Train lakes use weak labels |

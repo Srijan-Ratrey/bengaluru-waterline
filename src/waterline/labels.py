@@ -7,7 +7,7 @@ import rasterio
 import shapely
 from rasterio.features import geometry_mask
 
-from lakewatch.lakes import SIZE_BINS
+from waterline.lakes import SIZE_BINS
 
 LABEL_YEARS = (2018, 2025)  # series endpoints, fixed before any labels exist
 CLASSES = ("water", "veg")  # drawn as polygons; anything else inside the lake region is land

@@ -7,12 +7,12 @@ from odc.geo.geobox import GeoBox
 from odc.geo.xr import xr_coords
 from skimage.io import imread
 
-from lakewatch.cli import _overlays
-from lakewatch.composite import load, save, to_reflectance
-from lakewatch.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
-from lakewatch.labels import LAND, VEG, WATER, rasterize, split
-from lakewatch.stac import parse_boa_offset
-from lakewatch.trends import trends
+from waterline.cli import _overlays
+from waterline.composite import load, save, to_reflectance
+from waterline.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
+from waterline.labels import LAND, VEG, WATER, rasterize, split
+from waterline.stac import parse_boa_offset
+from waterline.trends import trends
 
 
 def test_boa_offset_from_product_xml():

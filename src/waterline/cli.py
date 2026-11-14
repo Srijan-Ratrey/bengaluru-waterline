@@ -11,12 +11,12 @@ import shapely
 import typer
 from skimage.io import imsave
 
-from lakewatch import composite as comp
-from lakewatch import dynworld, labels, stac, trends
-from lakewatch import evaluate as evaluation
-from lakewatch import lakes as lakes_mod
-from lakewatch.indices import measure as measure_lake_year
-from lakewatch.indices import mndwi, ndvi
+from waterline import composite as comp
+from waterline import dynworld, labels, stac, trends
+from waterline import evaluate as evaluation
+from waterline import lakes as lakes_mod
+from waterline.indices import measure as measure_lake_year
+from waterline.indices import mndwi, ndvi
 
 app = typer.Typer(no_args_is_help=True)
 AOI = Path("configs/aoi.geojson")

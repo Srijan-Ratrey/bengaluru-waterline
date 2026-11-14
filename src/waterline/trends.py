@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import false_discovery_control, kendalltau, theilslopes
 
-from lakewatch.evaluate import CLASSES, classify, scores
-from lakewatch.indices import PIXEL_HA, area_interval, ndvi
+from waterline.evaluate import CLASSES, classify, scores
+from waterline.indices import PIXEL_HA, area_interval, ndvi
 
 
 def areas(c, method: str, water_t: float, veg_t: float, delta: float) -> dict:

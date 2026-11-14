@@ -20,7 +20,7 @@ three_class_iou_veg_min = 0.60
 # Land: reported, no target. Few land pixels per lake and the grass-vs-dry-bed boundary is the fuzziest label.
 
 [method]
-# Chosen on val lakes only (`lakewatch evaluate val`, grid in data/eval_val_grid.parquet), 2026-11-13.
+# Chosen on val lakes only (`waterline evaluate val`, grid in data/eval_val_grid.parquet), 2026-11-13.
 method = "mndwi"   # pre-registered default kept: lowest val median |rel area error| of all methods (0.14; DW 0.5: 0.22)
 water_t = 0.0      # water = MNDWI > 0
 veg_t = 0.5        # veg = NDVI > 0.5 inside the lake, not water; best pooled 3-class IoU on val (0.59 vs 0.51 at 0.3)

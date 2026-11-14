@@ -96,8 +96,8 @@ A lake-year counts as a failure if |error| > 50%, or if 0 ha was labelled and mo
 ## Reproduce
 
 ```sh
-uv run lakewatch evaluate val    # writes the threshold grid too
-uv run lakewatch evaluate test   # refuses to run unless the 3-class targets are in configs/experiment.toml
+uv run waterline evaluate val    # writes the threshold grid too
+uv run waterline evaluate test   # refuses to run unless the 3-class targets are in configs/experiment.toml
 ```
 
-This needs the composites (`lakewatch measure`) and `data/labels/labels.gpkg`, which is committed.
+This needs the composites (`waterline measure`) and `data/labels/labels.gpkg`, which is committed.

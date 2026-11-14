@@ -5,7 +5,7 @@ You label **20 lakes x 2 years (2018, 2025) = 40 lake-years**. These labels are 
 ## Setup (once)
 
 ```sh
-uv run lakewatch label-prep   # already run; regenerates data/labelling/ if needed
+uv run waterline label-prep   # already run; regenerates data/labelling/ if needed
 ```
 
 In QGIS, add:

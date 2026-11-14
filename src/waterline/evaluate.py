@@ -3,8 +3,8 @@
 import numpy as np
 import pandas as pd
 
-from lakewatch.indices import PIXEL_HA, area_ha, area_interval, mndwi, ndvi, ndwi
-from lakewatch.labels import LAND, VEG, WATER
+from waterline.indices import PIXEL_HA, area_ha, area_interval, mndwi, ndvi, ndwi
+from waterline.labels import LAND, VEG, WATER
 
 CLASSES = {"land": LAND, "water": WATER, "veg": VEG}
 WATER_T = {

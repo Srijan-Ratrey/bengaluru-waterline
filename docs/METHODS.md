@@ -1,15 +1,15 @@
 # Methods
 
-How LakeWatch turns Sentinel-2 scenes into per-lake water, vegetation and land areas, intervals and trends. Every step below is one CLI command (see the README quickstart). Settings live in [configs/experiment.toml](../configs/experiment.toml).
+How Bengaluru Waterline turns Sentinel-2 scenes into per-lake water, vegetation and land areas, intervals and trends. Every step below is one CLI command (see the README quickstart). Settings live in [configs/experiment.toml](../configs/experiment.toml).
 
-## 1. Lakes (`lakewatch lakes`)
+## 1. Lakes (`waterline lakes`)
 
 - **Candidates:** named OpenStreetMap water polygons of at least 2 ha inside the Bengaluru AOI ([configs/aoi.geojson](../configs/aoi.geojson)). There are 222 of them.
 - **Selection:** 12 lakes per size bin (2-10, 10-50, 50+ ha), seed 0, giving 36 lakes.
 - **Manual review** dropped two of them, leaving **34 lakes** (D2):
   - Vrishabhavati, because it is a river corridor rather than a lake;
   - Nagarbhavi Thorai, because it has no water in any year.
-- **Added on request (2026-11-14):** 10 well-known lakes the draw missed, from the same OSM candidates (`lakewatch add-lakes`), tagged `sample=added`. They are measured and trended like the others, but are not part of the random sample and have no labels.
+- **Added on request (2026-11-14):** 10 well-known lakes the draw missed, from the same OSM candidates (`waterline add-lakes`), tagged `sample=added`. They are measured and trended like the others, but are not part of the random sample and have no labels.
 - **Pinning:** boundaries are committed in [configs/lakes.geojson](../configs/lakes.geojson) and used unchanged.
 
 Each lake is measured over two masks:
@@ -21,7 +21,7 @@ Each lake is measured over two masks:
 
 Water is counted out to the buffer because OSM outlines often sit inside the real shoreline.
 
-## 2. Scenes and composites (`lakewatch lock`, `lakewatch measure`)
+## 2. Scenes and composites (`waterline lock`, `waterline measure`)
 
 - **Source:** Sentinel-2 L2A from Microsoft Planetary Computer.
 - **Window:** winter (1 Jan - 28 Feb), every year 2018-2025 (D3). Winter has 7-11 clear days a year. 2017 has only 2-4 and was dropped, and the post-monsoon window has 2-4 a year.
@@ -73,7 +73,7 @@ E       = (number of water/non-water pixel edges in the MNDWI > 0 map) x 10 m x 
 
 The interval is an empirical, calibrated range, not a derived confidence interval.
 
-## 5. Trends (`lakewatch trends`)
+## 5. Trends (`waterline trends`)
 
 For each lake, over the 8 winter values (2018-2025) of water area and of vegetation area:
 
@@ -94,4 +94,4 @@ The per-year intervals are not propagated into the slope CI.
 | `data/areas.parquet` | per lake-year: `area`, `area_lo`, `area_hi` (water, lake region) and `water_ha`, `veg_ha`, `land_ha` (lake polygon) |
 | `data/trends.parquet` | per lake: slope, CI, p, q and verdict, for water and for vegetation |
 | `data/eval_{val,test}.parquet` | per labelled lake-year: estimated area and interval against the labelled area, and per-class counts |
-| `site/` | the static demo, from `lakewatch site` |
+| `site/` | the static demo, from `waterline site` |
