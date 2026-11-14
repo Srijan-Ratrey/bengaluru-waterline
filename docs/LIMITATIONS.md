@@ -40,9 +40,10 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 
 ## Time
 
-10. **Winter only (Jan-Feb).**
-    - Monsoon timing changes lake levels, and one season can't show that.
-    - The post-monsoon window was dropped because it has only 2-4 clear days a year.
+10. **Two dry-season windows, no monsoon.**
+    - Areas are measured in winter (Jan-Feb) and pre-monsoon (Mar-mid May). Both are dry seasons; the monsoon and post-monsoon months are too cloudy (2-4 clear days a year), so peak water levels are never seen.
+    - **Only winter is validated.** The pre-monsoon areas use the same frozen method but have no hand labels. Dry beds, grass and shrinking margins are commoner before the monsoon, so the land/vegetation confusion (item 4) may be worse there.
+    - The pre-monsoon composites were built without the Dynamic World cross-check (no Earth Engine project at the time).
 11. **2018-2025 only.**
     - 2017 has 2-4 clear winter days and was dropped.
     - Earlier years would need Landsat, which is out of scope for v1 (D16).
@@ -50,21 +51,23 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 ## Trends
 
 12. **There is little power to detect trends.**
-    - With 8 points, 41 of 44 lakes (31 of the random 34) come out as "no clear trend" for water.
+    - With 8 years (16 readings over two linked seasons), 42 of 44 lakes get no firm water verdict (9 of them are labelled "possibly"); correcting over the random 34 alone, 30 of 34.
     - Year-to-year swings are large. Hosakote, for example: 180, 24, 25, 22, 233, 257, 235, 22 ha.
     - "No clear trend" means the data can't tell; it does not mean the lake is stable.
-13. **Per-year intervals don't feed into the slope CI.**
+    - The 9 "possibly" water labels are not corrected for testing 44 lakes. About 2 of them could be chance, and there is no way to tell which.
+13. **The two seasons are not independent evidence.** A wet monsoon raises both the next winter and the next pre-monsoon. The test accounts for this by permuting whole years, so 16 readings give less than twice the power of 8.
+14. **Per-year intervals don't feed into the slope CI.**
     - The CI reflects scatter between years only.
     - A steady bias, like the dark-water undercount, shifts every year's area but leaves the slope's CI unchanged.
 
 ## Validation
 
-14. **One annotator.** There is no agreement ceiling, and the labeller's biases are built into every metric.
-15. **Only 2 of 8 years are labelled, on 20 of 44 lakes.** Trend verdicts are checked only through the 2018 -> 2025 direction, which was right for 7 of 12 test lakes.
-16. **Small validation set.** 8 validation lakes, only 3 of them clean, chose the method. The ±0.2 interval width rests on 16 lake-years.
+15. **One annotator.** There is no agreement ceiling, and the labeller's biases are built into every metric.
+16. **Only 2 of 8 years are labelled, on 20 of 44 lakes.** Trend verdicts are checked only through the 2018 -> 2025 direction, which was right for 7 of 12 test lakes.
+17. **Small validation set.** 8 validation lakes, only 3 of them clean, chose the method. The ±0.2 interval width rests on 16 lake-years.
 
 ## Scope
 
-17. **Extent only.** Nothing here measures water depth, volume, quality or algae species, or the reasons a lake changed.
-18. **No U-Net.** The planned learned model (spec §6.3, D4) is not built yet. It is the obvious next step for the dark-water and vegetated-water failures, and it would need new labelled lakes to test it.
-19. **Dynamic World needs an Earth Engine account.** The cross-check only (`measure`) needs one: a free non-commercial project. The reported areas use Sentinel-2 alone.
+18. **Extent only.** Nothing here measures water depth, volume, quality or algae species, or the reasons a lake changed.
+19. **No U-Net.** The planned learned model (spec §6.3, D4) is not built yet. It is the obvious next step for the dark-water and vegetated-water failures, and it would need new labelled lakes to test it.
+20. **Dynamic World needs an Earth Engine account.** Only the cross-check needs one (a free non-commercial project); without it, `measure` skips Dynamic World. The reported areas use Sentinel-2 alone.

@@ -54,10 +54,21 @@ def add_lakes(ids: str = typer.Argument(..., help="Comma-separated OSM lake_ids,
 
 
 @app.command()
-def lock(years: str = "2018-2025", max_cloud: float = 50):
+def lock(
+    years: str = "2018-2025",
+    max_cloud: float = 50,
+    seasons: str = typer.Option(
+        "", help="Comma-separated seasons to (re)lock; others already locked are kept"
+    ),
+):
     """Pin every scene per year x season window to data/scenes.lock.json and print counts."""
     y0, y1 = map(int, years.split("-"))
-    rows = stac.lock(json.loads(AOI.read_text()), range(y0, y1 + 1), max_cloud)
+    want = seasons.split(",") if seasons else list(stac.SEASONS)
+    if bad := set(want) - set(stac.SEASONS):
+        raise typer.BadParameter(f"unknown seasons {sorted(bad)}; known: {list(stac.SEASONS)}")
+    rows = stac.lock(json.loads(AOI.read_text()), range(y0, y1 + 1), max_cloud, want)
+    if seasons and LOCK.exists():  # keep the other seasons' pinned scenes untouched
+        rows = [r for r in json.loads(LOCK.read_text()) if r["season"] not in want] + rows
     LOCK.parent.mkdir(exist_ok=True)
     LOCK.write_text(json.dumps(rows, indent=1))
     # Scenes from adjacent tiles on the same day count once.
@@ -72,6 +83,7 @@ def lock(years: str = "2018-2025", max_cloud: float = 50):
 @app.command()
 def sheet(
     only: str = typer.Option("", help="Comma-separated lake_ids (default: all)"),
+    season: str = "winter",
     out: Path = Path("data/sheets"),
 ):
     """Per-lake PNG from cached composites: rows = true colour, MNDWI>0, DW>=0.5; one column per year."""
@@ -79,7 +91,7 @@ def sheet(
     out.mkdir(parents=True, exist_ok=True)
     for lake in only.split(",") if only else names.index:
         cols = []
-        for path in sorted(COMPOSITES.glob(f"{lake}_*.tif")):
+        for path in sorted(COMPOSITES.glob(f"{lake}_*_{season}.tif")):
             c = comp.load(path)
             inside = c["inside"].values[..., None]
             rgb = np.nan_to_num(np.clip(np.stack([c["B04"], c["B03"], c["B02"]], -1) / 0.3, 0, 1))
@@ -95,18 +107,26 @@ def sheet(
             )
         if not cols:
             continue
-        dst = out / f"{lake}.png"
+        dst = out / (f"{lake}.png" if season == "winter" else f"{lake}_{season}.png")
         imsave(dst, (np.concatenate(cols, 1) * 255).astype("uint8"), check_contrast=False)
         typer.echo(f"{names[lake]} ({len(cols)} years) -> {dst}")
 
 
 @app.command()
 def measure(
-    ee_project: str = typer.Option(..., envvar="EE_PROJECT", help="Earth Engine Cloud project ID"),
+    ee_project: str = typer.Option(
+        "", envvar="EE_PROJECT", help="Earth Engine project for the Dynamic World cross-check (optional)"
+    ),
     only: str = typer.Option("", help="Comma-separated lake_ids (default: all)"),
 ):
-    """Composite (cached as GeoTIFF in data/composites) + all methods for every lake-year -> observations.parquet."""
-    dynworld.init(ee_project)
+    """Composite (cached as GeoTIFF in data/composites) + all methods for every lake-year -> observations.parquet.
+
+    Without an Earth Engine project, new composites get an all-NaN `dw_water` band and no Dynamic World
+    rows; the reported areas use Sentinel-2 only. Delete those composites to add DW later."""
+    if ee_project:
+        dynworld.init(ee_project)
+    else:
+        typer.echo("no EE_PROJECT: skipping the Dynamic World cross-check for new composites", err=True)
     g = gpd.read_file(LAKES).set_index("lake_id").to_crs(comp.CRS)
     g_ll = g.to_crs(4326)
     lock = json.loads(LOCK.read_text())
@@ -131,22 +151,25 @@ def measure(
                     )
                     start, end = stac.SEASONS[season]
                     end_excl = dt.date.fromisoformat(f"{year}-{end}") + dt.timedelta(days=1)
-                    c["dw_water"] = (
-                        ("y", "x"),
-                        dynworld.water_prob(c.odc.geobox, f"{year}-{start}", str(end_excl)),
+                    gb = c.odc.geobox
+                    dw = (
+                        dynworld.water_prob(gb, f"{year}-{start}", str(end_excl))
+                        if ee_project
+                        else np.full(gb.shape, np.nan, "float32")
                     )
+                    c["dw_water"] = (("y", "x"), dw)
                     comp.save(c, path)
                 if c.attrs["valid_frac"] == 0:
-                    failed.append((lake, year, "no valid pixels"))
+                    failed.append((lake, year, season, "no valid pixels"))
                     continue
                 base = {"lake_id": lake, "year": year, "season": season}
                 rows += [base | r for r in measure_lake_year(c, c["dw_water"].values)]
                 typer.echo(
-                    f"{lake} {year}: n_scenes={c.attrs['n_scenes']} valid_frac={c.attrs['valid_frac']:.2f}"
+                    f"{lake} {year} {season}: n_scenes={c.attrs['n_scenes']} valid_frac={c.attrs['valid_frac']:.2f}"
                 )
             except Exception as e:  # noqa: BLE001 -- keep the long run going; every failure is reported below
-                failed.append((lake, year, repr(e)))
-                typer.echo(f"{lake} {year}: FAILED {e!r}", err=True)
+                failed.append((lake, year, season, repr(e)))
+                typer.echo(f"{lake} {year} {season}: FAILED {e!r}", err=True)
     obs = pd.DataFrame(rows)
     if only and OBS.exists():  # keep the other lakes' rows
         old = pd.read_parquet(OBS)
@@ -163,7 +186,7 @@ def measure(
 def label_prep(out: Path = Path("data/labelling"), seed: int = 0):
     """Freeze the lake split (configs/split.json) and export QGIS inputs for test+val lakes x LABEL_YEARS."""
     g = gpd.read_file(LAKES)
-    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    veg = _winter_veg()
     if SPLIT.exists():
         sets = json.loads(SPLIT.read_text())
         typer.echo(f"{SPLIT} exists; reusing it (delete it to re-split)")
@@ -196,7 +219,7 @@ def evaluate(subset: str = typer.Argument("val", help="val or test")):
         raise typer.BadParameter("freeze the 3-class target in configs/experiment.toml before scoring test")
     sets = json.loads(SPLIT.read_text())
     polys = gpd.read_file(LABELS, layer="labels")
-    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    veg = _winter_veg()
     grid, rows = [], []
     for lake in sets[subset]:
         for year in labels.LABEL_YEARS:
@@ -218,20 +241,31 @@ def evaluate(subset: str = typer.Argument("val", help="val or test")):
 
 
 @app.command("trends")
-def trends_cmd(alpha: float = 0.1):
-    """Areas for every lake x year at the frozen method -> data/areas.parquet; per-lake trends -> data/trends.parquet."""
+def trends_cmd(
+    alpha: float = 0.1,
+    seasons: str = typer.Option(
+        "", help="Comma-separated seasons to trend over (default: every season measured)"
+    ),
+):
+    """Areas for every lake x year x season at the frozen method -> data/areas.parquet; per-lake trends over
+    all seasons together (seasonal Kendall, see trends.trend) -> data/trends.parquet."""
     cfg = tomllib.loads(EXPERIMENT.read_text())["method"]
     names = gpd.read_file(LAKES).set_index("lake_id")["name"]
     rows = [
-        {"lake_id": lake, "year": int(p.stem.split("_")[1])} | trends.areas(comp.load(p), **cfg)
+        {"lake_id": lake, "year": int(p.stem.split("_")[1]), "season": p.stem.split("_")[2]}
+        | trends.areas(comp.load(p), **cfg)
         for lake in names.index
-        for p in sorted(COMPOSITES.glob(f"{lake}_*_winter.tif"))
+        for p in sorted(COMPOSITES.glob(f"{lake}_*.tif"))
     ]
     a = pd.DataFrame(rows)
     a.to_parquet("data/areas.parquet", index=False)
+    if seasons:
+        a = a[a.season.isin(seasons.split(","))]
+    typer.echo(f"seasons: {sorted(a.season.unique())}")
     w, v = trends.trends(a, "area", alpha), trends.trends(a, "veg_ha", alpha)
     t = w.merge(v[["lake_id", "slope", "q", "verdict"]], on="lake_id", suffixes=("", "_veg"))
-    first, last = (a[a.year == y].set_index("lake_id")["area"] for y in (a.year.min(), a.year.max()))
+    wi = a[a.season == "winter"]
+    first, last = (wi[wi.year == y].set_index("lake_id")["area"] for y in (wi.year.min(), wi.year.max()))
     t = t.assign(name=t.lake_id.map(names), area_first=t.lake_id.map(first), area_last=t.lake_id.map(last))
     t.to_parquet("data/trends.parquet", index=False)
     cols = ["name", "area_first", "area_last", "slope", "slope_lo", "slope_hi", "q", "verdict", "verdict_veg"]
@@ -245,10 +279,13 @@ def site(out: Path = Path("site")):
     """Static demo data for site/index.html: per lake-year image overlays + data.js. Run `trends` first."""
     exp = tomllib.loads(EXPERIMENT.read_text())
     g = gpd.read_file(LAKES).set_index("lake_id")
-    a = pd.read_parquet("data/areas.parquet").sort_values("year")
+    every = pd.read_parquet("data/areas.parquet").sort_values("year")
+    # Maps, ranges and flags stay on winter (the validated season); pre-monsoon water is an extra chart line.
+    a = every[every.season == "winter"]
+    pre = every[every.season == "premonsoon"].set_index(["lake_id", "year"])["area"]
     t = pd.read_parquet("data/trends.parquet").set_index("lake_id").round(3)
     split = {lake: k for k, v in json.loads(SPLIT.read_text()).items() if k != "seed" for lake in v}
-    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    veg = _winter_veg()
     truth = pd.concat(pd.read_parquet(f"data/eval_{s}.parquet") for s in ("val", "test"))
     truth = truth.set_index(["lake_id", "year"])["area_true"]
     (out / "img").mkdir(parents=True, exist_ok=True)
@@ -266,11 +303,12 @@ def site(out: Path = Path("site")):
              "flags": [k for k, on in flags.items() if on], "geometry": g.geometry[lake].__geo_interface__}
             | tr.to_dict()
             | s[["year", "area", "area_lo", "area_hi", "water_ha", "veg_ha", "land_ha"]].round(2).to_dict("list")
-            | {"labelled": [truth.get((lake, y)) for y in s.year]}
+            | {"labelled": [truth.get((lake, y)) for y in s.year],
+               "pre_area": [None if (v := pre.get((lake, y))) is None else round(v, 2) for y in s.year]}
         )  # fmt: skip
     (out / "data.js").write_text("const DATA = " + json.dumps(lakes, allow_nan=False) + ";\n")
     # Same numbers as downloadable CSVs (CC BY 4.0), linked from the site's About box.
-    csv = a.sort_values(["lake_id", "year"]).round(3)
+    csv = every.sort_values(["lake_id", "year", "season"], ascending=[True, True, False]).round(3)
     csv.insert(1, "name", csv.lake_id.map(g.name))
     csv.to_csv(out / "areas.csv", index=False)
     t.to_csv(out / "trends.csv")
@@ -304,3 +342,9 @@ def _group(lock: list[dict]) -> dict:
     for r in lock:
         out.setdefault((r["year"], r["season"]), []).append(r)
     return dict(sorted(out.items()))
+
+
+def _winter_veg() -> pd.Series:
+    """Median winter veg_frac per lake: what "vegetated" (and the frozen val/test lake types) is defined on."""
+    obs = pd.read_parquet(OBS).query("method == 'mndwi_zero' and season == 'winter'")
+    return obs.groupby("lake_id")["veg_frac"].median()

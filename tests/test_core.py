@@ -5,6 +5,7 @@ import shapely
 import xarray as xr
 from odc.geo.geobox import GeoBox
 from odc.geo.xr import xr_coords
+from scipy.stats import kendalltau, theilslopes
 from skimage.io import imread
 
 from waterline.cli import _overlays
@@ -12,7 +13,7 @@ from waterline.composite import load, save, to_reflectance
 from waterline.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
 from waterline.labels import LAND, VEG, WATER, rasterize, split
 from waterline.stac import parse_boa_offset
-from waterline.trends import trends
+from waterline.trends import trend, trends
 
 
 def test_boa_offset_from_product_xml():
@@ -136,6 +137,34 @@ def test_trends_flag_only_clear_monotonic_change():
     t = trends(a, "area").set_index("lake_id")
     assert t.loc["down", "slope"] == -2 and t.loc["down", "verdict"] == "shrinking"
     assert t.loc["flat", "verdict"] == "no clear trend" and t.loc["noisy", "verdict"] == "no clear trend"
+    assert t.loc["flat", "p"] == 1.0
+
+
+def test_possible_trend_is_significant_alone_but_not_after_correction():
+    years = np.arange(2018, 2026)
+    weak = [10.0, 12, 9, 13, 11, 15, 14, 16]  # p = 0.031 on its own
+    lakes = {"down": 20.0 - 2 * (years - 2018), "weak": weak} | {f"flat{k}": 5.0 for k in range(20)}
+    a = pd.concat(pd.DataFrame({"lake_id": k, "year": years, "area": v}) for k, v in lakes.items())
+    t = trends(a, "area").set_index("lake_id")
+    assert t.loc["weak", "p"] < 0.05 and t.loc["weak", "q"] >= 0.1  # 22 lakes tested
+    assert t.loc["weak", "verdict"] == "possibly growing" and t.loc["down", "verdict"] == "shrinking"
+    assert (t.verdict == "no clear trend").sum() == 20
+
+
+def test_seasonal_trend_counts_a_repeated_season_once_and_matches_scipy():
+    years = np.arange(2018, 2026)
+    w = np.array([10.0, 12, 9, 13, 11, 15, 12.5, 16])  # weak upward drift, no ties
+    one = trend(pd.DataFrame({"winter": w}, index=years))
+    # Single season = plain Mann-Kendall / Theil-Sen.
+    slope, _, lo, hi = theilslopes(w, years, alpha=0.9)
+    assert np.allclose([one["slope"], one["slope_lo"], one["slope_hi"]], [slope, lo, hi])
+    assert np.isclose(one["p"], kendalltau(years, w, method="exact").pvalue)
+    # A second season that just repeats the first adds no evidence (independent seasons would shrink p).
+    dup = trend(pd.DataFrame({"winter": w, "pre": w}, index=years))
+    assert dup["p"] == one["p"] and dup["slope"] == one["slope"]
+    # A second season with its own noise around the same drift does add evidence.
+    own = trend(pd.DataFrame({"winter": w, "pre": [6.0, 5, 8, 7, 9, 8, 11, 10]}, index=years))
+    assert own["p"] < one["p"] / 2
 
 
 def test_site_overlay_keeps_land_transparent(tmp_path):

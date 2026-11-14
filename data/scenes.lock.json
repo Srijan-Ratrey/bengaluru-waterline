@@ -1510,5 +1510,2039 @@
   "cloud_cover": 41.847897,
   "processing_baseline": "05.11",
   "boa_offset": -1000
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180509T050701_R019_T43PHQ_20201012T073641",
+  "datetime": "2018-05-09T05:07:01.024000Z",
+  "cloud_cover": 41.282043,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180504T050649_R019_T43PHQ_20201012T054858",
+  "datetime": "2018-05-04T05:06:49.027000Z",
+  "cloud_cover": 41.861034,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180504T050649_R019_T43PGQ_20201012T054855",
+  "datetime": "2018-05-04T05:06:49.027000Z",
+  "cloud_cover": 16.963343,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180429T050701_R019_T43PHQ_20201013T040201",
+  "datetime": "2018-04-29T05:07:01.024000Z",
+  "cloud_cover": 31.419577,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180429T050701_R019_T43PGQ_20201026T081015",
+  "datetime": "2018-04-29T05:07:01.024000Z",
+  "cloud_cover": 21.538945,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180424T050649_R019_T43PHQ_20201013T021103",
+  "datetime": "2018-04-24T05:06:49.027000Z",
+  "cloud_cover": 1.713498,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180424T050649_R019_T43PGQ_20201013T021105",
+  "datetime": "2018-04-24T05:06:49.027000Z",
+  "cloud_cover": 0.402976,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180414T050649_R019_T43PHQ_20201012T221648",
+  "datetime": "2018-04-14T05:06:49.027000Z",
+  "cloud_cover": 12.613097,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180414T050649_R019_T43PGQ_20201012T221646",
+  "datetime": "2018-04-14T05:06:49.027000Z",
+  "cloud_cover": 6.669646,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180409T050651_R019_T43PHQ_20201012T200522",
+  "datetime": "2018-04-09T05:06:51.026000Z",
+  "cloud_cover": 7.746935,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180409T050651_R019_T43PGQ_20201012T200517",
+  "datetime": "2018-04-09T05:06:51.026000Z",
+  "cloud_cover": 2.518836,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180404T050649_R019_T43PHQ_20201020T012950",
+  "datetime": "2018-04-04T05:06:49.027000Z",
+  "cloud_cover": 1.510101,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180404T050649_R019_T43PGQ_20201012T181653",
+  "datetime": "2018-04-04T05:06:49.027000Z",
+  "cloud_cover": 1.221652,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180330T050651_R019_T43PHQ_20201013T162714",
+  "datetime": "2018-03-30T05:06:51.026000Z",
+  "cloud_cover": 3.896845,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180330T050651_R019_T43PGQ_20201013T162712",
+  "datetime": "2018-03-30T05:06:51.026000Z",
+  "cloud_cover": 2.992468,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180325T050649_R019_T43PHQ_20201013T140800",
+  "datetime": "2018-03-25T05:06:49.027000Z",
+  "cloud_cover": 4.150859,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180325T050649_R019_T43PGQ_20201013T140800",
+  "datetime": "2018-03-25T05:06:49.027000Z",
+  "cloud_cover": 3.49974,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180320T050651_R019_T43PHQ_20201013T113115",
+  "datetime": "2018-03-20T05:06:51.026000Z",
+  "cloud_cover": 0.057959,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20180320T050651_R019_T43PGQ_20201013T113112",
+  "datetime": "2018-03-20T05:06:51.026000Z",
+  "cloud_cover": 1.171547,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180315T050649_R019_T43PHQ_20201013T092456",
+  "datetime": "2018-03-15T05:06:49.027000Z",
+  "cloud_cover": 1.769768,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180315T050649_R019_T43PGQ_20201013T092446",
+  "datetime": "2018-03-15T05:06:49.027000Z",
+  "cloud_cover": 7.532112,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180305T050659_R019_T43PHQ_20201013T070112",
+  "datetime": "2018-03-05T05:06:59.027000Z",
+  "cloud_cover": 0.423572,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2018,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20180305T050659_R019_T43PGQ_20201013T070111",
+  "datetime": "2018-03-05T05:06:59.027000Z",
+  "cloud_cover": 0.300422,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190514T050701_R019_T43PHQ_20201006T135435",
+  "datetime": "2019-05-14T05:07:01.024000Z",
+  "cloud_cover": 2.934071,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190514T050701_R019_T43PGQ_20201106T003355",
+  "datetime": "2019-05-14T05:07:01.024000Z",
+  "cloud_cover": 15.72412,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190509T050659_R019_T43PHQ_20201006T120253",
+  "datetime": "2019-05-09T05:06:59.024000Z",
+  "cloud_cover": 34.166568,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190509T050659_R019_T43PGQ_20201006T120252",
+  "datetime": "2019-05-09T05:06:59.024000Z",
+  "cloud_cover": 43.890369,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190424T050701_R019_T43PHQ_20201105T164739",
+  "datetime": "2019-04-24T05:07:01.024000Z",
+  "cloud_cover": 18.652559,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190424T050701_R019_T43PGQ_20201105T164736",
+  "datetime": "2019-04-24T05:07:01.024000Z",
+  "cloud_cover": 3.101993,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190419T050659_R019_T43PHQ_20201007T040343",
+  "datetime": "2019-04-19T05:06:59.024000Z",
+  "cloud_cover": 8.260809,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190419T050659_R019_T43PGQ_20201007T040341",
+  "datetime": "2019-04-19T05:06:59.024000Z",
+  "cloud_cover": 6.949094,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190414T050701_R019_T43PHQ_20201007T015346",
+  "datetime": "2019-04-14T05:07:01.024000Z",
+  "cloud_cover": 0.041221,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190414T050701_R019_T43PGQ_20201007T015343",
+  "datetime": "2019-04-14T05:07:01.024000Z",
+  "cloud_cover": 0.131375,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190409T050659_R019_T43PHQ_20201007T000746",
+  "datetime": "2019-04-09T05:06:59.024000Z",
+  "cloud_cover": 5.316462,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190409T050659_R019_T43PGQ_20201007T000745",
+  "datetime": "2019-04-09T05:06:59.024000Z",
+  "cloud_cover": 0.424769,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190404T050941_R019_T43PHQ_20201006T215933",
+  "datetime": "2019-04-04T05:09:41.024000Z",
+  "cloud_cover": 0.035232,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190404T050941_R019_T43PGQ_20201006T215929",
+  "datetime": "2019-04-04T05:09:41.024000Z",
+  "cloud_cover": 0.04568,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190330T050659_R019_T43PHQ_20201105T111551",
+  "datetime": "2019-03-30T05:06:59.024000Z",
+  "cloud_cover": 0.013656,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190330T050659_R019_T43PGQ_20201007T122704",
+  "datetime": "2019-03-30T05:06:59.024000Z",
+  "cloud_cover": 0.019859,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190325T050651_R019_T43PHQ_20201007T102327",
+  "datetime": "2019-03-25T05:06:51.024000Z",
+  "cloud_cover": 0.025451,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190325T050651_R019_T43PGQ_20201007T102322",
+  "datetime": "2019-03-25T05:06:51.024000Z",
+  "cloud_cover": 0.029033,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190320T050649_R019_T43PHQ_20201007T084109",
+  "datetime": "2019-03-20T05:06:49.024000Z",
+  "cloud_cover": 0.017601,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190320T050649_R019_T43PGQ_20201007T084110",
+  "datetime": "2019-03-20T05:06:49.024000Z",
+  "cloud_cover": 1.093557,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190315T050651_R019_T43PHQ_20201007T065105",
+  "datetime": "2019-03-15T05:06:51.024000Z",
+  "cloud_cover": 0.039419,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190315T050651_R019_T43PGQ_20201007T065107",
+  "datetime": "2019-03-15T05:06:51.024000Z",
+  "cloud_cover": 0.061027,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190310T050649_R019_T43PHQ_20201007T051514",
+  "datetime": "2019-03-10T05:06:49.024000Z",
+  "cloud_cover": 1.954771,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20190310T050649_R019_T43PGQ_20201007T051513",
+  "datetime": "2019-03-10T05:06:49.024000Z",
+  "cloud_cover": 17.439225,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190305T050701_R019_T43PHQ_20201030T153335",
+  "datetime": "2019-03-05T05:07:01.024000Z",
+  "cloud_cover": 9.174462,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2019,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20190305T050701_R019_T43PGQ_20201030T153323",
+  "datetime": "2019-03-05T05:07:01.024000Z",
+  "cloud_cover": 25.367352,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200513T050649_R019_T43PGQ_20200918T014307",
+  "datetime": "2020-05-13T05:06:49.024000Z",
+  "cloud_cover": 49.325602,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200428T050701_R019_T43PHQ_20200922T100057",
+  "datetime": "2020-04-28T05:07:01.024000Z",
+  "cloud_cover": 42.784577,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200423T050649_R019_T43PHQ_20200921T193143",
+  "datetime": "2020-04-23T05:06:49.024000Z",
+  "cloud_cover": 20.534102,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200418T050651_R019_T43PHQ_20200923T235710",
+  "datetime": "2020-04-18T05:06:51.024000Z",
+  "cloud_cover": 2.609597,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200418T050651_R019_T43PGQ_20200923T235707",
+  "datetime": "2020-04-18T05:06:51.024000Z",
+  "cloud_cover": 3.074837,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200413T050649_R019_T43PHQ_20200923T090603",
+  "datetime": "2020-04-13T05:06:49.024000Z",
+  "cloud_cover": 0.033767,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200413T050649_R019_T43PHQ_20200923T090600",
+  "datetime": "2020-04-13T05:06:49.024000Z",
+  "cloud_cover": 0.071983,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200413T050649_R019_T43PGQ_20200923T090550",
+  "datetime": "2020-04-13T05:06:49.024000Z",
+  "cloud_cover": 0.095761,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200413T050649_R019_T43PGQ_20200923T090549",
+  "datetime": "2020-04-13T05:06:49.024000Z",
+  "cloud_cover": 0.102964,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200408T050651_R019_T43PHQ_20200925T113444",
+  "datetime": "2020-04-08T05:06:51.024000Z",
+  "cloud_cover": 8.964771,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200408T050651_R019_T43PGQ_20200925T113444",
+  "datetime": "2020-04-08T05:06:51.024000Z",
+  "cloud_cover": 7.017045,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200403T050649_R019_T43PHQ_20200924T205437",
+  "datetime": "2020-04-03T05:06:49.024000Z",
+  "cloud_cover": 17.548532,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200403T050649_R019_T43PGQ_20200924T205425",
+  "datetime": "2020-04-03T05:06:49.024000Z",
+  "cloud_cover": 20.175678,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200329T050651_R019_T43PHQ_20201020T215716",
+  "datetime": "2020-03-29T05:06:51.024000Z",
+  "cloud_cover": 0.089047,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200329T050651_R019_T43PGQ_20201020T215644",
+  "datetime": "2020-03-29T05:06:51.024000Z",
+  "cloud_cover": 0.120871,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200324T050649_R019_T43PHQ_20201018T223652",
+  "datetime": "2020-03-24T05:06:49.024000Z",
+  "cloud_cover": 0.052309,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200324T050649_R019_T43PGQ_20201018T223647",
+  "datetime": "2020-03-24T05:06:49.024000Z",
+  "cloud_cover": 2.291912,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200319T050651_R019_T43PHQ_20201012T175547",
+  "datetime": "2020-03-19T05:06:51.024000Z",
+  "cloud_cover": 0.061022,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200319T050651_R019_T43PGQ_20201012T182554",
+  "datetime": "2020-03-19T05:06:51.024000Z",
+  "cloud_cover": 0.07315,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200314T050649_R019_T43PHQ_20201010T021655",
+  "datetime": "2020-03-14T05:06:49.024000Z",
+  "cloud_cover": 0.053699,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200314T050649_R019_T43PGQ_20201010T022011",
+  "datetime": "2020-03-14T05:06:49.024000Z",
+  "cloud_cover": 0.121584,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200309T050651_R019_T43PHQ_20201003T014713",
+  "datetime": "2020-03-09T05:06:51.024000Z",
+  "cloud_cover": 40.858392,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20200309T050651_R019_T43PGQ_20201003T014707",
+  "datetime": "2020-03-09T05:06:51.024000Z",
+  "cloud_cover": 43.733966,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2020,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20200304T050709_R019_T43PGQ_20200928T132427",
+  "datetime": "2020-03-04T05:07:09.024000Z",
+  "cloud_cover": 20.231719,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210503T050651_R019_T43PHQ_20210504T022318",
+  "datetime": "2021-05-03T05:06:51.024000Z",
+  "cloud_cover": 30.201744,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210503T050651_R019_T43PGQ_20210504T020942",
+  "datetime": "2021-05-03T05:06:51.024000Z",
+  "cloud_cover": 36.491219,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210428T050649_R019_T43PHQ_20210428T182318",
+  "datetime": "2021-04-28T05:06:49.024000Z",
+  "cloud_cover": 1.671385,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210428T050649_R019_T43PGQ_20210428T184253",
+  "datetime": "2021-04-28T05:06:49.024000Z",
+  "cloud_cover": 22.320177,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210423T050651_R019_T43PHQ_20210423T174122",
+  "datetime": "2021-04-23T05:06:51.024000Z",
+  "cloud_cover": 22.778737,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210418T050649_R019_T43PHQ_20210419T103732",
+  "datetime": "2021-04-18T05:06:49.024000Z",
+  "cloud_cover": 13.505141,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210418T050649_R019_T43PGQ_20210419T103117",
+  "datetime": "2021-04-18T05:06:49.024000Z",
+  "cloud_cover": 8.203879,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210408T050649_R019_T43PHQ_20210408T190012",
+  "datetime": "2021-04-08T05:06:49.024000Z",
+  "cloud_cover": 40.130639,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210403T050651_R019_T43PHQ_20210404T071445",
+  "datetime": "2021-04-03T05:06:51.024000Z",
+  "cloud_cover": 4.267189,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210403T050651_R019_T43PGQ_20210404T064802",
+  "datetime": "2021-04-03T05:06:51.024000Z",
+  "cloud_cover": 7.536934,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210324T050651_R019_T43PHQ_20210324T151437",
+  "datetime": "2021-03-24T05:06:51.024000Z",
+  "cloud_cover": 26.842369,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210324T050651_R019_T43PGQ_20210324T160126",
+  "datetime": "2021-03-24T05:06:51.024000Z",
+  "cloud_cover": 7.914656,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210319T050649_R019_T43PHQ_20210319T185237",
+  "datetime": "2021-03-19T05:06:49.024000Z",
+  "cloud_cover": 3.221575,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210319T050649_R019_T43PGQ_20210319T185553",
+  "datetime": "2021-03-19T05:06:49.024000Z",
+  "cloud_cover": 9.830023,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210314T050651_R019_T43PHQ_20210314T180316",
+  "datetime": "2021-03-14T05:06:51.024000Z",
+  "cloud_cover": 0.106745,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210314T050651_R019_T43PGQ_20210314T180206",
+  "datetime": "2021-03-14T05:06:51.024000Z",
+  "cloud_cover": 0.109767,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210309T050649_R019_T43PHQ_20210309T172214",
+  "datetime": "2021-03-09T05:06:49.024000Z",
+  "cloud_cover": 0.312318,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20210309T050649_R019_T43PGQ_20210309T172245",
+  "datetime": "2021-03-09T05:06:49.024000Z",
+  "cloud_cover": 0.485742,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210304T050711_R019_T43PHQ_20210304T184026",
+  "datetime": "2021-03-04T05:07:11.024000Z",
+  "cloud_cover": 0.1028,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2021,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20210304T050711_R019_T43PGQ_20210304T200918",
+  "datetime": "2021-03-04T05:07:11.024000Z",
+  "cloud_cover": 0.155784,
+  "processing_baseline": "02.12",
+  "boa_offset": 0
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220503T050649_R019_T43PHQ_20220503T184508",
+  "datetime": "2022-05-03T05:06:49.024000Z",
+  "cloud_cover": 19.789825,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220503T050649_R019_T43PGQ_20220503T192649",
+  "datetime": "2022-05-03T05:06:49.024000Z",
+  "cloud_cover": 6.253694,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220428T050701_R019_T43PHQ_20240608T192144",
+  "datetime": "2022-04-28T05:07:01.024000Z",
+  "cloud_cover": 0.784729,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220428T050701_R019_T43PHQ_20220429T004952",
+  "datetime": "2022-04-28T05:07:01.024000Z",
+  "cloud_cover": 0.781378,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220428T050701_R019_T43PGQ_20240608T192144",
+  "datetime": "2022-04-28T05:07:01.024000Z",
+  "cloud_cover": 6.281947,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220428T050701_R019_T43PGQ_20220429T004623",
+  "datetime": "2022-04-28T05:07:01.024000Z",
+  "cloud_cover": 6.280325,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220418T050701_R019_T43PHQ_20240609T032617",
+  "datetime": "2022-04-18T05:07:01.024000Z",
+  "cloud_cover": 36.748806,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220418T050701_R019_T43PHQ_20220418T134334",
+  "datetime": "2022-04-18T05:07:01.024000Z",
+  "cloud_cover": 36.754456,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220418T050701_R019_T43PGQ_20240609T032617",
+  "datetime": "2022-04-18T05:07:01.024000Z",
+  "cloud_cover": 1.415438,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220418T050701_R019_T43PGQ_20220418T132940",
+  "datetime": "2022-04-18T05:07:01.024000Z",
+  "cloud_cover": 1.403977,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220408T050651_R019_T43PHQ_20240524T030604",
+  "datetime": "2022-04-08T05:06:51.024000Z",
+  "cloud_cover": 6.89796,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220408T050651_R019_T43PHQ_20220408T175831",
+  "datetime": "2022-04-08T05:06:51.024000Z",
+  "cloud_cover": 6.891423,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220408T050651_R019_T43PGQ_20240524T030604",
+  "datetime": "2022-04-08T05:06:51.024000Z",
+  "cloud_cover": 17.467536,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220408T050651_R019_T43PGQ_20220408T182747",
+  "datetime": "2022-04-08T05:06:51.024000Z",
+  "cloud_cover": 17.453009,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220403T050649_R019_T43PHQ_20220403T191454",
+  "datetime": "2022-04-03T05:06:49.024000Z",
+  "cloud_cover": 7.883468,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220403T050649_R019_T43PGQ_20220403T183536",
+  "datetime": "2022-04-03T05:06:49.024000Z",
+  "cloud_cover": 11.967248,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220329T050701_R019_T43PHQ_20240526T222708",
+  "datetime": "2022-03-29T05:07:01.024000Z",
+  "cloud_cover": 1.00718,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220329T050701_R019_T43PHQ_20220329T144239",
+  "datetime": "2022-03-29T05:07:01.024000Z",
+  "cloud_cover": 1.009791,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220329T050701_R019_T43PGQ_20240526T222708",
+  "datetime": "2022-03-29T05:07:01.024000Z",
+  "cloud_cover": 0.208774,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220329T050701_R019_T43PGQ_20220329T161148",
+  "datetime": "2022-03-29T05:07:01.024000Z",
+  "cloud_cover": 0.209752,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220319T050701_R019_T43PHQ_20240530T011115",
+  "datetime": "2022-03-19T05:07:01.024000Z",
+  "cloud_cover": 0.771524,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220319T050701_R019_T43PHQ_20220319T154510",
+  "datetime": "2022-03-19T05:07:01.024000Z",
+  "cloud_cover": 0.771563,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220319T050701_R019_T43PGQ_20240530T011115",
+  "datetime": "2022-03-19T05:07:01.024000Z",
+  "cloud_cover": 0.033801,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220319T050701_R019_T43PGQ_20220319T144807",
+  "datetime": "2022-03-19T05:07:01.024000Z",
+  "cloud_cover": 0.033848,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220314T050649_R019_T43PHQ_20240525T150546",
+  "datetime": "2022-03-14T05:06:49.024000Z",
+  "cloud_cover": 8.907847,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220314T050649_R019_T43PHQ_20220314T135407",
+  "datetime": "2022-03-14T05:06:49.024000Z",
+  "cloud_cover": 8.869937,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220314T050649_R019_T43PGQ_20240525T150546",
+  "datetime": "2022-03-14T05:06:49.024000Z",
+  "cloud_cover": 0.201344,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220314T050649_R019_T43PGQ_20220314T135759",
+  "datetime": "2022-03-14T05:06:49.024000Z",
+  "cloud_cover": 0.201193,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220309T050701_R019_T43PHQ_20240525T022455",
+  "datetime": "2022-03-09T05:07:01.024000Z",
+  "cloud_cover": 0.145544,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220309T050701_R019_T43PHQ_20220309T145439",
+  "datetime": "2022-03-09T05:07:01.024000Z",
+  "cloud_cover": 0.143898,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220309T050701_R019_T43PGQ_20240525T022455",
+  "datetime": "2022-03-09T05:07:01.024000Z",
+  "cloud_cover": 0.0921,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20220309T050701_R019_T43PGQ_20220309T160108",
+  "datetime": "2022-03-09T05:07:01.024000Z",
+  "cloud_cover": 0.091818,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220304T050709_R019_T43PHQ_20240524T123103",
+  "datetime": "2022-03-04T05:07:09.024000Z",
+  "cloud_cover": 1.552427,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220304T050709_R019_T43PHQ_20220305T001031",
+  "datetime": "2022-03-04T05:07:09.024000Z",
+  "cloud_cover": 1.549059,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220304T050709_R019_T43PGQ_20240524T123103",
+  "datetime": "2022-03-04T05:07:09.024000Z",
+  "cloud_cover": 0.003818,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2022,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20220304T050709_R019_T43PGQ_20220305T000024",
+  "datetime": "2022-03-04T05:07:09.024000Z",
+  "cloud_cover": 0.003727,
+  "processing_baseline": "04.00",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230428T050659_R019_T43PGQ_20240831T124646",
+  "datetime": "2023-04-28T05:06:59.024000Z",
+  "cloud_cover": 42.510378,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230428T050659_R019_T43PGQ_20230428T102229",
+  "datetime": "2023-04-28T05:06:59.024000Z",
+  "cloud_cover": 42.471904,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230423T050651_R019_T43PHQ_20230424T231458",
+  "datetime": "2023-04-23T05:06:51.024000Z",
+  "cloud_cover": 7.36612,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230423T050651_R019_T43PGQ_20230424T231821",
+  "datetime": "2023-04-23T05:06:51.024000Z",
+  "cloud_cover": 4.634335,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230418T050659_R019_T43PHQ_20240905T094026",
+  "datetime": "2023-04-18T05:06:59.024000Z",
+  "cloud_cover": 0.0,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230418T050659_R019_T43PHQ_20230418T222343",
+  "datetime": "2023-04-18T05:06:59.024000Z",
+  "cloud_cover": 3e-06,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230418T050659_R019_T43PGQ_20240905T094026",
+  "datetime": "2023-04-18T05:06:59.024000Z",
+  "cloud_cover": 0.037483,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230418T050659_R019_T43PGQ_20230418T213318",
+  "datetime": "2023-04-18T05:06:59.024000Z",
+  "cloud_cover": 0.037352,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230413T050651_R019_T43PHQ_20240829T072229",
+  "datetime": "2023-04-13T05:06:51.024000Z",
+  "cloud_cover": 1.534776,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230413T050651_R019_T43PHQ_20230413T124818",
+  "datetime": "2023-04-13T05:06:51.024000Z",
+  "cloud_cover": 1.535844,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230413T050651_R019_T43PGQ_20230413T123931",
+  "datetime": "2023-04-13T05:06:51.024000Z",
+  "cloud_cover": 0.000171,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230408T050659_R019_T43PHQ_20241011T212033",
+  "datetime": "2023-04-08T05:06:59.024000Z",
+  "cloud_cover": 1.071446,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230408T050659_R019_T43PHQ_20230408T113300",
+  "datetime": "2023-04-08T05:06:59.024000Z",
+  "cloud_cover": 1.070235,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230408T050659_R019_T43PGQ_20241011T212033",
+  "datetime": "2023-04-08T05:06:59.024000Z",
+  "cloud_cover": 1.095899,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230408T050659_R019_T43PGQ_20230408T111512",
+  "datetime": "2023-04-08T05:06:59.024000Z",
+  "cloud_cover": 1.082808,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230403T050651_R019_T43PHQ_20240826T223215",
+  "datetime": "2023-04-03T05:06:51.024000Z",
+  "cloud_cover": 12.125295,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230403T050651_R019_T43PHQ_20230403T102439",
+  "datetime": "2023-04-03T05:06:51.024000Z",
+  "cloud_cover": 12.100159,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230403T050651_R019_T43PGQ_20240826T223215",
+  "datetime": "2023-04-03T05:06:51.024000Z",
+  "cloud_cover": 5.583879,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230403T050651_R019_T43PGQ_20230403T102428",
+  "datetime": "2023-04-03T05:06:51.024000Z",
+  "cloud_cover": 5.577872,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230329T050659_R019_T43PHQ_20240823T135058",
+  "datetime": "2023-03-29T05:06:59.024000Z",
+  "cloud_cover": 9.706122,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230329T050659_R019_T43PHQ_20230329T092927",
+  "datetime": "2023-03-29T05:06:59.024000Z",
+  "cloud_cover": 9.683465,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230324T050651_R019_T43PHQ_20240823T231147",
+  "datetime": "2023-03-24T05:06:51.024000Z",
+  "cloud_cover": 20.069213,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230324T050651_R019_T43PHQ_20230324T110859",
+  "datetime": "2023-03-24T05:06:51.024000Z",
+  "cloud_cover": 20.056035,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230324T050651_R019_T43PGQ_20240823T231147",
+  "datetime": "2023-03-24T05:06:51.024000Z",
+  "cloud_cover": 44.883615,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230324T050651_R019_T43PGQ_20230324T105525",
+  "datetime": "2023-03-24T05:06:51.024000Z",
+  "cloud_cover": 44.874784,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230319T050659_R019_T43PHQ_20230319T100222",
+  "datetime": "2023-03-19T05:06:59.024000Z",
+  "cloud_cover": 24.579202,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230319T050659_R019_T43PGQ_20240824T195202",
+  "datetime": "2023-03-19T05:06:59.024000Z",
+  "cloud_cover": 13.848768,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20230319T050659_R019_T43PGQ_20230319T095912",
+  "datetime": "2023-03-19T05:06:59.024000Z",
+  "cloud_cover": 13.778622,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230314T050651_R019_T43PHQ_20240820T165549",
+  "datetime": "2023-03-14T05:06:51.024000Z",
+  "cloud_cover": 7.3e-05,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230314T050651_R019_T43PHQ_20230314T132109",
+  "datetime": "2023-03-14T05:06:51.024000Z",
+  "cloud_cover": 4e-05,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230314T050651_R019_T43PGQ_20240820T165549",
+  "datetime": "2023-03-14T05:06:51.024000Z",
+  "cloud_cover": 0.021179,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230314T050651_R019_T43PGQ_20230314T131739",
+  "datetime": "2023-03-14T05:06:51.024000Z",
+  "cloud_cover": 0.021183,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230304T050711_R019_T43PHQ_20240819T062628",
+  "datetime": "2023-03-04T05:07:11.024000Z",
+  "cloud_cover": 0.000109,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230304T050711_R019_T43PHQ_20230304T102224",
+  "datetime": "2023-03-04T05:07:11.024000Z",
+  "cloud_cover": 7.6e-05,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230304T050711_R019_T43PGQ_20240819T062628",
+  "datetime": "2023-03-04T05:07:11.024000Z",
+  "cloud_cover": 0.000161,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2023,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20230304T050711_R019_T43PGQ_20230304T102245",
+  "datetime": "2023-03-04T05:07:11.024000Z",
+  "cloud_cover": 0.000205,
+  "processing_baseline": "05.09",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240507T050651_R019_T43PHQ_20240507T100657",
+  "datetime": "2024-05-07T05:06:51.024000Z",
+  "cloud_cover": 45.721215,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240507T050651_R019_T43PGQ_20240507T094016",
+  "datetime": "2024-05-07T05:06:51.024000Z",
+  "cloud_cover": 20.677145,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240502T050649_R019_T43PHQ_20240502T091407",
+  "datetime": "2024-05-02T05:06:49.024000Z",
+  "cloud_cover": 19.736049,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240502T050649_R019_T43PGQ_20240502T091239",
+  "datetime": "2024-05-02T05:06:49.024000Z",
+  "cloud_cover": 8.663812,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240427T050651_R019_T43PHQ_20240427T112213",
+  "datetime": "2024-04-27T05:06:51.024000Z",
+  "cloud_cover": 0.000683,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240427T050651_R019_T43PGQ_20240427T112210",
+  "datetime": "2024-04-27T05:06:51.024000Z",
+  "cloud_cover": 0.000402,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240422T050649_R019_T43PHQ_20240422T101229",
+  "datetime": "2024-04-22T05:06:49.024000Z",
+  "cloud_cover": 1.662606,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240422T050649_R019_T43PGQ_20240422T100358",
+  "datetime": "2024-04-22T05:06:49.024000Z",
+  "cloud_cover": 13.717398,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240412T050649_R019_T43PHQ_20240412T092646",
+  "datetime": "2024-04-12T05:06:49.024000Z",
+  "cloud_cover": 32.121006,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240412T050649_R019_T43PGQ_20240412T091706",
+  "datetime": "2024-04-12T05:06:49.024000Z",
+  "cloud_cover": 38.411394,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240407T050651_R019_T43PHQ_20240407T101510",
+  "datetime": "2024-04-07T05:06:51.024000Z",
+  "cloud_cover": 0.201506,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240407T050651_R019_T43PGQ_20240407T101517",
+  "datetime": "2024-04-07T05:06:51.024000Z",
+  "cloud_cover": 0.12111,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240402T050649_R019_T43PHQ_20240402T102302",
+  "datetime": "2024-04-02T05:06:49.024000Z",
+  "cloud_cover": 1.807874,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240402T050649_R019_T43PGQ_20240402T103221",
+  "datetime": "2024-04-02T05:06:49.024000Z",
+  "cloud_cover": 2.607912,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240328T050651_R019_T43PHQ_20240330T035744",
+  "datetime": "2024-03-28T05:06:51.024000Z",
+  "cloud_cover": 0.116187,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240328T050651_R019_T43PGQ_20240330T042438",
+  "datetime": "2024-03-28T05:06:51.024000Z",
+  "cloud_cover": 0.356667,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240323T050649_R019_T43PHQ_20240323T101425",
+  "datetime": "2024-03-23T05:06:49.024000Z",
+  "cloud_cover": 0.002007,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240323T050649_R019_T43PGQ_20240323T095105",
+  "datetime": "2024-03-23T05:06:49.024000Z",
+  "cloud_cover": 0.007503,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240318T050651_R019_T43PHQ_20240318T101910",
+  "datetime": "2024-03-18T05:06:51.024000Z",
+  "cloud_cover": 0.245119,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240318T050651_R019_T43PGQ_20240318T101913",
+  "datetime": "2024-03-18T05:06:51.024000Z",
+  "cloud_cover": 0.194415,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240313T050649_R019_T43PHQ_20240313T164956",
+  "datetime": "2024-03-13T05:06:49.024000Z",
+  "cloud_cover": 0.000348,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240313T050649_R019_T43PGQ_20240313T171334",
+  "datetime": "2024-03-13T05:06:49.024000Z",
+  "cloud_cover": 0.000111,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240308T050651_R019_T43PHQ_20240308T101754",
+  "datetime": "2024-03-08T05:06:51.024000Z",
+  "cloud_cover": 7e-05,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20240308T050651_R019_T43PGQ_20240308T101807",
+  "datetime": "2024-03-08T05:06:51.024000Z",
+  "cloud_cover": 0.19762,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240303T050719_R019_T43PHQ_20240303T091804",
+  "datetime": "2024-03-03T05:07:19.024000Z",
+  "cloud_cover": 2.298844,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2024,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20240303T050719_R019_T43PGQ_20240303T091802",
+  "datetime": "2024-03-03T05:07:19.024000Z",
+  "cloud_cover": 3.699894,
+  "processing_baseline": "05.10",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250514T051241_R019_T43PHQ_20250514T075816",
+  "datetime": "2025-05-14T05:12:41.024000Z",
+  "cloud_cover": 40.457013,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250514T051241_R019_T43PGQ_20250514T075816",
+  "datetime": "2025-05-14T05:12:41.024000Z",
+  "cloud_cover": 47.385421,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250512T050711_R019_T43PHQ_20250512T110716",
+  "datetime": "2025-05-12T05:07:11.025000Z",
+  "cloud_cover": 4.450974,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250512T050711_R019_T43PGQ_20250512T110716",
+  "datetime": "2025-05-12T05:07:11.025000Z",
+  "cloud_cover": 0.591612,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250507T050659_R019_T43PHQ_20250507T084755",
+  "datetime": "2025-05-07T05:06:59.024000Z",
+  "cloud_cover": 10.814165,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250507T050659_R019_T43PGQ_20250507T084755",
+  "datetime": "2025-05-07T05:06:59.024000Z",
+  "cloud_cover": 10.472817,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250502T050711_R019_T43PHQ_20250502T102506",
+  "datetime": "2025-05-02T05:07:11.025000Z",
+  "cloud_cover": 35.873806,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250502T050711_R019_T43PGQ_20250502T102506",
+  "datetime": "2025-05-02T05:07:11.025000Z",
+  "cloud_cover": 21.139856,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250427T050659_R019_T43PHQ_20250427T073850",
+  "datetime": "2025-04-27T05:06:59.024000Z",
+  "cloud_cover": 45.269534,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250424T051241_R019_T43PHQ_20250424T102418",
+  "datetime": "2025-04-24T05:12:41.024000Z",
+  "cloud_cover": 4.674629,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250424T051241_R019_T43PGQ_20250424T102418",
+  "datetime": "2025-04-24T05:12:41.024000Z",
+  "cloud_cover": 10.604211,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250422T050711_R019_T43PHQ_20250422T102513",
+  "datetime": "2025-04-22T05:07:11.025000Z",
+  "cloud_cover": 0.79024,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250422T050711_R019_T43PGQ_20250422T102513",
+  "datetime": "2025-04-22T05:07:11.025000Z",
+  "cloud_cover": 0.402743,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250417T050659_R019_T43PHQ_20250417T074435",
+  "datetime": "2025-04-17T05:06:59.024000Z",
+  "cloud_cover": 0.285291,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250417T050659_R019_T43PGQ_20250417T074435",
+  "datetime": "2025-04-17T05:06:59.024000Z",
+  "cloud_cover": 0.098269,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250412T050711_R019_T43PHQ_20250412T102015",
+  "datetime": "2025-04-12T05:07:11.025000Z",
+  "cloud_cover": 0.084283,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250412T050711_R019_T43PGQ_20250412T102015",
+  "datetime": "2025-04-12T05:07:11.025000Z",
+  "cloud_cover": 8.479026,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250407T050649_R019_T43PHQ_20250407T074451",
+  "datetime": "2025-04-07T05:06:49.024000Z",
+  "cloud_cover": 0.478193,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250407T050649_R019_T43PGQ_20250407T074451",
+  "datetime": "2025-04-07T05:06:49.024000Z",
+  "cloud_cover": 0.002623,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250404T051241_R019_T43PHQ_20250404T114311",
+  "datetime": "2025-04-04T05:12:41.024000Z",
+  "cloud_cover": 23.217016,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250404T051241_R019_T43PGQ_20250404T114311",
+  "datetime": "2025-04-04T05:12:41.024000Z",
+  "cloud_cover": 14.150387,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250402T050711_R019_T43PHQ_20250402T101606",
+  "datetime": "2025-04-02T05:07:11.025000Z",
+  "cloud_cover": 5.870508,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250328T050659_R019_T43PHQ_20250328T075231",
+  "datetime": "2025-03-28T05:06:59.024000Z",
+  "cloud_cover": 14.34065,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250328T050659_R019_T43PGQ_20250328T075231",
+  "datetime": "2025-03-28T05:06:59.024000Z",
+  "cloud_cover": 17.292337,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250323T050711_R019_T43PGQ_20250323T100117",
+  "datetime": "2025-03-23T05:07:11.025000Z",
+  "cloud_cover": 36.732629,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250318T050659_R019_T43PHQ_20250318T080831",
+  "datetime": "2025-03-18T05:06:59.024000Z",
+  "cloud_cover": 30.871055,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250318T050659_R019_T43PGQ_20250318T080831",
+  "datetime": "2025-03-18T05:06:59.024000Z",
+  "cloud_cover": 3.84283,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250315T051241_R019_T43PHQ_20250315T113317",
+  "datetime": "2025-03-15T05:12:41.024000Z",
+  "cloud_cover": 0.000173,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2A_MSIL2A_20250315T051241_R019_T43PGQ_20250315T113317",
+  "datetime": "2025-03-15T05:12:41.024000Z",
+  "cloud_cover": 0.000289,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250313T050711_R019_T43PHQ_20250313T102208",
+  "datetime": "2025-03-13T05:07:11.025000Z",
+  "cloud_cover": 11.960063,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250313T050711_R019_T43PGQ_20250313T102208",
+  "datetime": "2025-03-13T05:07:11.025000Z",
+  "cloud_cover": 3.618279,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250308T050659_R019_T43PHQ_20250308T072151",
+  "datetime": "2025-03-08T05:06:59.024000Z",
+  "cloud_cover": 2e-05,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2B_MSIL2A_20250308T050659_R019_T43PGQ_20250308T072151",
+  "datetime": "2025-03-08T05:06:59.024000Z",
+  "cloud_cover": 0.081327,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250303T050741_R019_T43PHQ_20250303T100209",
+  "datetime": "2025-03-03T05:07:41.025000Z",
+  "cloud_cover": 47.058576,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
+ },
+ {
+  "year": 2025,
+  "season": "premonsoon",
+  "id": "S2C_MSIL2A_20250303T050741_R019_T43PGQ_20250303T100209",
+  "datetime": "2025-03-03T05:07:41.025000Z",
+  "cloud_cover": 40.520382,
+  "processing_baseline": "05.11",
+  "boa_offset": -1000
  }
 ]

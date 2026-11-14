@@ -62,7 +62,8 @@ def measure(c, dw) -> list[dict]:
         idx = fn(c).values
         for how in ("otsu", "zero"):
             masks[f"{name}_{how}"] = (idx > threshold(idx, inside, how)) & inside
-    for p in DW_THRESHOLDS:
+    has_dw = bool(np.isfinite(dw).any())  # all-NaN when measured without Earth Engine
+    for p in DW_THRESHOLDS if has_dw else ():
         masks[f"dw_{p}"] = (dw >= p) & inside
     v = ndvi(c).values[lake]
     common = {
@@ -71,8 +72,8 @@ def measure(c, dw) -> list[dict]:
         "dw_valid_frac": float(np.isfinite(dw[inside]).mean()),
         "veg_frac": float((v[np.isfinite(v)] > NDVI_VEG).mean()),
     }
-    ref = masks["dw_0.5"]
+    ref = masks.get("dw_0.5")
     return [
-        {"method": m, "water_area_ha": area_ha(w), "iou_dw50": iou(w, ref), **common}
+        {"method": m, "water_area_ha": area_ha(w), "iou_dw50": iou(w, ref) if has_dw else np.nan, **common}
         for m, w in masks.items()
     ]

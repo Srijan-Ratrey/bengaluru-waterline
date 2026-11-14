@@ -24,7 +24,10 @@ Water is counted out to the buffer because OSM outlines often sit inside the rea
 ## 2. Scenes and composites (`waterline lock`, `waterline measure`)
 
 - **Source:** Sentinel-2 L2A from Microsoft Planetary Computer.
-- **Window:** winter (1 Jan - 28 Feb), every year 2018-2025 (D3). Winter has 7-11 clear days a year. 2017 has only 2-4 and was dropped, and the post-monsoon window has 2-4 a year.
+- **Windows:** two a year, 2018-2025 (D3):
+  - **winter** (1 Jan - 28 Feb), 7-11 clear days a year. This is the validated season: the hand labels, the map overlays, the area ranges and the site's numbers all use it.
+  - **pre-monsoon** (1 Mar - 15 May), 8-14 clear days a year. Added 2026-11-14 to give the trend tests twice the readings. It has no hand labels.
+  - 2017 has only 2-4 clear days in every window and was dropped; the post-monsoon window (2-4 a year) was dropped too.
 - **Pinning:** every scene ID is pinned in `data/scenes.lock.json`, with scene cloud cover below 50%.
 - **Radiometry:** reflectance = (DN + offset) / 10000. The offset (0 or -1000) is read per scene from `BOA_ADD_OFFSET` in the product XML. It is not in the STAC metadata. DN 0 is treated as no data.
 - **Cloud mask:** pixels are dropped when the Scene Classification Layer (SCL) class is 0, 1, 3, 8, 9 or 10. These are no data, saturated, cloud shadow, medium and high cloud, and cirrus.
@@ -75,13 +78,17 @@ The interval is an empirical, calibrated range, not a derived confidence interva
 
 ## 5. Trends (`waterline trends`)
 
-For each lake, over the 8 winter values (2018-2025) of water area and of vegetation area:
+For each lake, over its 16 readings (winter and pre-monsoon, 2018-2025) of water area and of vegetation area:
 
-- **Slope:** the Theil-Sen slope in ha/yr, with scipy's rank-based 90% CI. A bootstrap wasn't used because 8 points are too few to resample.
-- **Mann-Kendall p:** Kendall's tau of area against year.
+- **Test: seasonal Mann-Kendall, exact.** The statistic S sums, within each season, the signs of all later-minus-earlier differences, so winter is only compared with winter and pre-monsoon with pre-monsoon. The p-value comes from all 40,320 orderings of the 8 years, moving each year's two readings together.
+  - Why permute whole years: a lake's winter and pre-monsoon areas in the same year are strongly linked (both follow the previous monsoon). Treating them as independent would count one wet year twice and overstate trends. Under this test a second season that only repeated the first would add no evidence at all (checked in `tests/test_core.py`).
+  - With one season this is the exact Mann-Kendall test.
+- **Slope:** the seasonal Theil-Sen slope in ha/yr (median of all within-season pairwise slopes), with a rank-based 90% CI whose variance includes the covariance between seasons (Hirsch & Slack 1984).
 - **Correction:** Benjamini-Hochberg q across all 44 lakes.
+- `waterline trends --seasons winter` reproduces the winter-only analysis.
 - **Verdict:**
   - *shrinking* or *growing* when q < 0.1, with the slope's sign giving the direction;
+  - *possibly shrinking* or *possibly growing* when p < 0.05 for the lake on its own but q >= 0.1. These are leads, not findings: with no real change anywhere, about 1 lake in 20 would get this label by chance (about 2 of 44);
   - *no clear trend* otherwise.
 
 The per-year intervals are not propagated into the slope CI.
@@ -91,7 +98,7 @@ The per-year intervals are not propagated into the slope CI.
 | file | content |
 |---|---|
 | `data/observations.parquet` | every method x lake-year, from the exploration phase |
-| `data/areas.parquet` | per lake-year: `area`, `area_lo`, `area_hi` (water, lake region) and `water_ha`, `veg_ha`, `land_ha` (lake polygon) |
-| `data/trends.parquet` | per lake: slope, CI, p, q and verdict, for water and for vegetation |
+| `data/areas.parquet` | per lake, year and season: `area`, `area_lo`, `area_hi` (water, lake region) and `water_ha`, `veg_ha`, `land_ha` (lake polygon) |
+| `data/trends.parquet` | per lake: slope, CI, p, q, verdict and `n_years`, for water and for vegetation |
 | `data/eval_{val,test}.parquet` | per labelled lake-year: estimated area and interval against the labelled area, and per-class counts |
 | `site/` | the static demo, from `waterline site` |
