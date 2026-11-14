@@ -95,6 +95,19 @@ uv run pytest
 Split frozen in [configs/split.json](configs/split.json), criteria in [configs/experiment.toml](configs/experiment.toml). Still on spec defaults until their gates: D7, D8, D11, D14.
 - **Full run (36 lakes x 2018-2025):** 21 of 36 lakes have >60% vegetation cover inside the polygon in a typical year; open-water-only methods report them as near-empty. Median IoU vs Dynamic World p>=0.5: MNDWI>0 0.46, MNDWI+Otsu 0.30, NDWI+Otsu 0.12, so Otsu is dropped as default. This drove D13.
 
+## Related work (checked 2026-11-14)
+
+- **[Namma Lakes / Bangalore Lake Watch](https://nammalakes.com)** ([0x101/lakewatch](https://github.com/0x101/lakewatch)) is the closest project.
+  - It tracks 176 Bengaluru lakes from Sentinel-2 since 2015, with a 0-100 health score, timelapses and a leaderboard ranked by five-year change.
+  - Its method is NDWI + Otsu for water and NDVI for algae.
+  - It publishes no accuracy against ground truth, no uncertainty ranges and no significance testing.
+  - Here, NDWI + Otsu was the weakest method tested (median IoU 0.12 against Dynamic World, see Findings). This project's contribution is the measured accuracy: held-out hand labels, calibrated intervals, corrected trend tests and a separate water/vegetation/land split.
+- **[UrbanPulse Bengaluru](https://github.com/jiyag410-sketch/urbanpulse-bengaluru)** measures city-wide lake loss: about 26% from 1999-2003 to 2020-2024, from Landsat MNDWI water frequency checked against JRC Global Surface Water. It works at ward level, not per lake.
+- **[Bengaluru Kere Atlas](https://github.com/adityaratnam09/BengaluruKereAtlas)** covers lake water quality from KSPCB reports, not extent.
+- **[IISc BLIS](https://wgbis.ces.iisc.ac.in/sdss/BLIS/about.html)** has the historical extent and encroachment of 175 lakes.
+- **Papers:** algae and macrophyte cover of Bellandur and Varthur, 2002-2019 ([MDPI Remote Sensing 12(22):3843](https://www.mdpi.com/2072-4292/12/22/3843)); and Ganesha Raj (ex-ISRO), lake water spread from Sentinel-1 radar.
+- **`Clnay5/lakewatch`** is a same-named Sentinel-2 water-change tool for Wuhan.
+
 ## Licence
 
 - **Code:** MIT ([LICENSE](LICENSE)).
