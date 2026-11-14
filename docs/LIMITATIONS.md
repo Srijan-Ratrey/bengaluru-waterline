@@ -19,7 +19,7 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
    - Grass on a dry bed and weeds on water look alike, and the line between grass and a dry bed is the fuzziest part of the labels too.
 5. **Small lakes have wide intervals.**
    - At 10 m, a 2 ha lake is about 200 pixels, and shoreline pixels dominate.
-   - 22 of 34 lakes have a median interval wider than their water area. The site flags them as "wide interval".
+   - 25 of 44 lakes have a median interval wider than their water area. The site flags them as "wide interval".
 6. **Dynamic World is not a reliable check on weedy lakes.**
    - It is the best single method on large clean lakes: IoU 0.92-0.94 on Madiwala.
    - But it misses most of weed-margined Hosakote 2018: 21 ha, against 207 ha labelled.
@@ -33,7 +33,8 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 
 ## Boundaries
 
-9. **The OSM outlines are taken as given.**
+9. **The OSM outlines and names are taken as given.**
+   - Names can be ambiguous. OSM's "Puttenahalli Lake" above 2 ha is the Yelahanka one, not the better-known JP Nagar lake.
    - Two lakes were dropped (a river corridor, and a lake with no water in any year), but the others weren't redrawn.
    - Water is counted out to 150 m beyond the outline to make up for outlines drawn inside the real shoreline. Water in a nearby pond inside that 150 m also counts.
 
@@ -49,7 +50,7 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 ## Trends
 
 12. **There is little power to detect trends.**
-    - With 8 points, 31 of 34 lakes come out as "no clear trend" for water.
+    - With 8 points, 41 of 44 lakes (31 of the random 34) come out as "no clear trend" for water.
     - Year-to-year swings are large. Hosakote, for example: 180, 24, 25, 22, 233, 257, 235, 22 ha.
     - "No clear trend" means the data can't tell; it does not mean the lake is stable.
 13. **Per-year intervals don't feed into the slope CI.**
@@ -59,7 +60,7 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 ## Validation
 
 14. **One annotator.** There is no agreement ceiling, and the labeller's biases are built into every metric.
-15. **Only 2 of 8 years are labelled, on 20 of 34 lakes.** Trend verdicts are checked only through the 2018 -> 2025 direction, which was right for 7 of 12 test lakes.
+15. **Only 2 of 8 years are labelled, on 20 of 44 lakes.** Trend verdicts are checked only through the 2018 -> 2025 direction, which was right for 7 of 12 test lakes.
 16. **Small validation set.** 8 validation lakes, only 3 of them clean, chose the method. The ±0.2 interval width rests on 16 lake-years.
 
 ## Scope

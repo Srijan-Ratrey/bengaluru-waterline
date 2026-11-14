@@ -33,10 +33,24 @@ EXPERIMENT = Path("configs/experiment.toml")
 def lakes(per_bin: int = 12, seed: int = 0):
     """Fetch OSM lake candidates and write a size-stratified selection to configs/lakes.geojson."""
     cands = lakes_mod.fetch(shapely.geometry.shape(json.loads(AOI.read_text())))
-    picked = lakes_mod.select(cands, per_bin, seed)
+    picked = lakes_mod.select(cands, per_bin, seed).assign(sample="random")
     picked.to_file(LAKES, driver="GeoJSON")
     typer.echo(f"{len(cands)} candidates -> {len(picked)} lakes in {LAKES}")
     typer.echo(picked[["lake_id", "name", "area_ha"]].round(1).to_string())
+
+
+@app.command()
+def add_lakes(ids: str = typer.Argument(..., help="Comma-separated OSM lake_ids, e.g. r8469370,r8754543")):
+    """Append named OSM lakes to configs/lakes.geojson, tagged sample="added" (outside the random sample)."""
+    g = gpd.read_file(LAKES)
+    g["sample"] = g["sample"].fillna("random") if "sample" in g else "random"
+    cands = lakes_mod.fetch(shapely.geometry.shape(json.loads(AOI.read_text())))
+    want = [i for i in ids.split(",") if i not in set(g.lake_id)]
+    new = cands[cands.lake_id.isin(want)].assign(sample="added")
+    if missing := set(want) - set(new.lake_id):
+        raise typer.BadParameter(f"not OSM lake candidates (named, >= 2 ha, in the AOI): {sorted(missing)}")
+    pd.concat([g, new.to_crs(g.crs)], ignore_index=True).to_file(LAKES, driver="GeoJSON")
+    typer.echo(new[["lake_id", "name", "area_ha"]].round(1).to_string(index=False) + f"\n-> {LAKES}")
 
 
 @app.command()
@@ -134,6 +148,9 @@ def measure(
                 failed.append((lake, year, repr(e)))
                 typer.echo(f"{lake} {year}: FAILED {e!r}", err=True)
     obs = pd.DataFrame(rows)
+    if only and OBS.exists():  # keep the other lakes' rows
+        old = pd.read_parquet(OBS)
+        obs = pd.concat([old[~old.lake_id.isin(lake_ids)], obs], ignore_index=True)
     obs.to_parquet(OBS, index=False)
     typer.echo(f"{len(obs)} rows -> {OBS}; {len(failed)} lake-years failed")
     for f in failed:
@@ -245,7 +262,7 @@ def site(out: Path = Path("site")):
         }
         tr = t.loc[lake, ["verdict", "slope", "slope_lo", "slope_hi", "q", "verdict_veg", "slope_veg"]]
         lakes.append(
-            {"id": lake, "name": g.name[lake], "split": split.get(lake), "bounds": bounds,
+            {"id": lake, "name": g.name[lake], "split": split.get(lake), "sample": g["sample"].get(lake, "random"), "bounds": bounds,
              "flags": [k for k, on in flags.items() if on], "geometry": g.geometry[lake].__geo_interface__}
             | tr.to_dict()
             | s[["year", "area", "area_lo", "area_hi", "water_ha", "veg_ha", "land_ha"]].round(2).to_dict("list")

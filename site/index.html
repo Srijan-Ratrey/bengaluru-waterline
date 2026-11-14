@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LakeWatch Bengaluru</title>
-<meta name="description" content="Open water and weed cover of 34 Bengaluru lakes from Sentinel-2, every winter 2018-2025, with uncertainty and hand-labelled validation.">
+<meta name="description" content="Open water and weed cover of Bengaluru lakes from Sentinel-2, every winter 2018-2025, with uncertainty and hand-labelled validation.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -148,7 +148,7 @@
 <aside>
   <div class="brand">
     <div class="logo" aria-hidden="true"></div>
-    <div><h1>LakeWatch Bengaluru</h1><p>34 lakes from space · 2018-2025</p></div>
+    <div><h1>LakeWatch Bengaluru</h1><p id="sub"></p></div>
     <button id="aboutBtn">About</button>
   </div>
   <div class="scroll" id="side"></div>
@@ -175,6 +175,9 @@
   <p style="color:var(--text-2)">How much open water and how much weed cover each lake had every winter (Jan-Feb), measured from
     10 m Sentinel-2 satellite images. Water is where MNDWI &gt; 0; vegetation is NDVI &gt; 0.5 inside the lake outline.
     Every number has a range, and the method was checked against hand-drawn maps of lakes it was never tuned on.</p>
+  <p style="color:var(--text-2)">Lakes: 34 were drawn at random from all named OpenStreetMap lakes of at least 2 ha
+    (12 per size band), so they stand for Bengaluru's lakes in general. 10 well-known lakes the draw missed were added
+    on request and are marked <i>added on request</i>; they are not part of the random sample.</p>
   <h3>How far to trust this</h3>
   <ul>
     <li><b>Water areas run low.</b> On 12 held-out test lakes the median water-area error was 24%, against a 10% target
@@ -214,6 +217,7 @@ const chip = v => v === "no clear trend" ? '<span class="chip">no clear trend</s
 const byId = Object.fromEntries(DATA.map(l => [l.id, l]));
 let year = YEARS.at(-1), selected = null, filter = null, chart = null, timer = null, query = "", sort = "change";
 const yi = () => YEARS.indexOf(year);
+$("sub").textContent = `${DATA.length} lakes from space · ${YEARS[0]}-${YEARS.at(-1)}`;
 
 /* ---------- map ---------- */
 const map = L.map("map", { zoomSnap: 0.5, zoomControl: false });
@@ -309,6 +313,7 @@ function detailView(l) {
     <div class="chips">
       ${l.flags.length ? '<span class="chip warn">⚠ lower confidence</span>' : '<span class="chip">higher confidence</span>'}
       ${l.split && l.split !== "train" ? `<span class="chip">✎ hand-labelled (${l.split} set)</span>` : ""}
+      ${l.sample === "added" ? '<span class="chip">added on request</span>' : ""}
     </div>
     <div class="stats">
       <div class="stat"><div class="k">Open water · ${year}</div><div class="v">${ha(l.area[i])} <small>ha</small></div>

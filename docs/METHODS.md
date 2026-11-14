@@ -9,6 +9,7 @@ How LakeWatch turns Sentinel-2 scenes into per-lake water, vegetation and land a
 - **Manual review** dropped two of them, leaving **34 lakes** (D2):
   - Vrishabhavati, because it is a river corridor rather than a lake;
   - Nagarbhavi Thorai, because it has no water in any year.
+- **Added on request (2026-11-14):** 10 well-known lakes the draw missed, from the same OSM candidates (`lakewatch add-lakes`), tagged `sample=added`. They are measured and trended like the others, but are not part of the random sample and have no labels.
 - **Pinning:** boundaries are committed in [configs/lakes.geojson](../configs/lakes.geojson) and used unchanged.
 
 Each lake is measured over two masks:
@@ -78,7 +79,7 @@ For each lake, over the 8 winter values (2018-2025) of water area and of vegetat
 
 - **Slope:** the Theil-Sen slope in ha/yr, with scipy's rank-based 90% CI. A bootstrap wasn't used because 8 points are too few to resample.
 - **Mann-Kendall p:** Kendall's tau of area against year.
-- **Correction:** Benjamini-Hochberg q across the 34 lakes.
+- **Correction:** Benjamini-Hochberg q across all 44 lakes.
 - **Verdict:**
   - *shrinking* or *growing* when q < 0.1, with the slope's sign giving the direction;
   - *no clear trend* otherwise.
