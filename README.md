@@ -2,7 +2,7 @@
 
 Satellite lake-extent tracker for Bengaluru. Measures per-lake yearly water area from Sentinel-2, with uncertainty and held-out-lake validation.
 
-Full spec: [lakewatch-tech-spec.md](lakewatch-tech-spec.md)
+Docs: [METHODS](docs/METHODS.md) · [VALIDATION](docs/VALIDATION.md) · [LIMITATIONS](docs/LIMITATIONS.md) · [labelling guide](docs/LABELLING.md) · [full spec](lakewatch-tech-spec.md)
 
 ## Quickstart
 
@@ -82,11 +82,19 @@ uv run pytest
 | D4 | Indices + U-Net (U-Net built regardless of index results) |
 | D9 | Planetary Computer for Sentinel-2 (Dynamic World still via Earth Engine) |
 | D10 | CLI + library |
-| D12 | Licence: undecided, repo private until settled |
-| D15 | Name: LakeWatch. Note: `0x101/lakewatch` and `Clnay5/lakewatch` are similar Sentinel-2 lake projects; review them before any novelty claim |
+| D12 | Licence: MIT for code; CC BY 4.0 for derived data and hand labels; lake outlines stay ODbL (see Licence) |
+| D15 | Name: LakeWatch. Checked 2026-11-14: `0x101/lakewatch` (city lake water + algae kit) and `Clnay5/lakewatch` (Sentinel-2 water change, MIT) are similar and same-named. No "first" claims; what sets this one apart is the held-out hand-labelled validation, calibrated intervals and the water/veg/land split |
 | D16 | Sentinel-2 only for v1 |
 
 | D5/D6 | Hand labels: 20 lakes (8 val + 12 test) x 2018, 2025, drawn on the Sentinel-2 composites ([guide](docs/LABELLING.md)). Train lakes use weak labels |
 
 Split frozen in [configs/split.json](configs/split.json), criteria in [configs/experiment.toml](configs/experiment.toml). Still on spec defaults until their gates: D7, D8, D11, D14.
 - **Full run (36 lakes x 2018-2025):** 21 of 36 lakes have >60% vegetation cover inside the polygon in a typical year; open-water-only methods report them as near-empty. Median IoU vs Dynamic World p>=0.5: MNDWI>0 0.46, MNDWI+Otsu 0.30, NDWI+Otsu 0.12, so Otsu is dropped as default. This drove D13.
+
+## Licence
+
+- **Code:** MIT ([LICENSE](LICENSE)).
+- **Derived data and hand labels:** CC BY 4.0. This covers the areas, trends, `data/labels/labels.gpkg` and the site's images and data.
+- **Lake outlines:** [configs/lakes.geojson](configs/lakes.geojson) and the outlines in `site/data.js` come from OpenStreetMap. They stay under the [ODbL](https://opendatacommons.org/licenses/odbl/) with attribution "© OpenStreetMap contributors".
+- **Imagery:** contains modified Copernicus Sentinel data 2018-2025, accessed through Microsoft Planetary Computer.
+- **Dynamic World:** © Google / World Resources Institute, CC BY 4.0. Used only as a cross-check, so it is not in any published output.

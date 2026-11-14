@@ -2,6 +2,7 @@
 name = "lakewatch"
 version = "0.1.0"
 description = "Satellite lake-extent tracker for Bengaluru (Sentinel-2)"
+license = "MIT"
 authors = [
     { name = "Srijan Ratrey", email = "48729738+Srijan-Ratrey@users.noreply.github.com" }
 ]
