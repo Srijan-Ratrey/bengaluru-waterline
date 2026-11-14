@@ -4,154 +4,415 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LakeWatch Bengaluru</title>
+<meta name="description" content="Open water and weed cover of 34 Bengaluru lakes from Sentinel-2, every winter 2018-2025, with uncertainty and hand-labelled validation.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="data.js"></script>
 <style>
-  :root { --fg: #1d2330; --muted: #5b6475; --line: #dfe3ea; --water: #1e6eff; --veg: #28be3c;
-          --shrink: #d1452f; --grow: #1e6eff; --flat: #8a93a3; }
+  /* Dark-only UI. Water / veg / shrinking colours pass the dataviz palette validator (dark, all pairs). */
+  :root {
+    color-scheme: dark;
+    --bg: #0b0e13; --panel: #12161d; --panel-2: #1a1f28; --line: #262c37;
+    --text: #eef1f5; --text-2: #b4bccb; --muted: #8790a0;
+    --water: #3987e5; --veg: #199e70; --shrink: #d95926; --accent: #6aa8ff; --radius: 12px;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; font: 15px/1.45 system-ui, sans-serif; color: var(--fg); background: #fff;
-         display: grid; grid-template: "head head" auto "map side" 1fr / 1fr 420px; height: 100vh; }
-  header { grid-area: head; padding: 10px 16px; border-bottom: 1px solid var(--line);
-           display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  h1 { font-size: 18px; margin: 0; }
-  #map { grid-area: map; }
-  aside { grid-area: side; overflow-y: auto; padding: 12px 16px; border-left: 1px solid var(--line); }
-  h2 { font-size: 17px; margin: 4px 0; }
-  h3 { font-size: 14px; margin: 18px 0 4px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-  .muted { color: var(--muted); font-size: 13px; }
-  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; margin-right: 4px;
-           border: 1px solid var(--line); }
-  .shrinking { color: var(--shrink); } .growing { color: var(--grow); }
-  .warn { background: #fff4d6; border-color: #f0d68a; }
-  label { font-size: 14px; }
-  input[type=range] { width: 220px; vertical-align: middle; }
-  ul { padding-left: 18px; margin: 4px 0; } li { margin: 3px 0; }
-  a { color: var(--water); cursor: pointer; }
-  @media (max-width: 800px) {
-    body { grid-template: "head" auto "map" 55vh "side" auto / 1fr; height: auto; }
-    aside { border-left: 0; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 Inter, system-ui, sans-serif;
+         display: grid; grid-template: "side map" 1fr / 400px minmax(0, 1fr); overflow: hidden; }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  a { color: var(--accent); }
+
+  /* sidebar */
+  aside { grid-area: side; background: var(--panel); border-right: 1px solid var(--line);
+          display: flex; flex-direction: column; min-height: 0; }
+  .brand { padding: 18px 20px 14px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .logo { width: 34px; height: 34px; border-radius: 10px; flex: none;
+          background: radial-gradient(circle at 35% 35%, #7cc0ff, var(--water) 55%, #123a6e); box-shadow: 0 0 18px #3987e566; }
+  .brand h1 { font-size: 17px; margin: 0; letter-spacing: -.01em; }
+  .brand p { margin: 0; color: var(--muted); font-size: 12.5px; }
+  .brand button { margin-left: auto; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+                  padding: 6px 10px; font-size: 12.5px; color: var(--text-2); white-space: nowrap; }
+  .brand button:hover { color: var(--text); border-color: #3a4250; }
+  .scroll { overflow-y: auto; flex: 1; padding: 16px 20px 24px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 8px;
+          text-align: left; transition: border-color .15s; }
+  .tile b { display: block; font-size: 22px; line-height: 1.1; font-weight: 700; }
+  .tile span { font-size: 11.5px; color: var(--muted); }
+  .tile:hover { border-color: #3a4250; }
+  .tile[aria-pressed=true] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .tools { display: flex; gap: 8px; margin-bottom: 10px; }
+  .tools input, .tools select { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+  .tools input { flex: 1; min-width: 0; }
+  .tools input:focus, .tools select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+  .lake-row { display: grid; grid-template-columns: 1fr 76px 64px; align-items: center; gap: 10px; width: 100%;
+              background: none; border: 0; border-radius: 8px; padding: 8px; text-align: left; }
+  .lake-row:hover, .lake-row:focus-visible { background: var(--panel-2); outline: none; }
+  .lake-row .nm { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lake-row .sub { font-size: 12px; color: var(--muted); }
+  .lake-row .val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .lake-row .val small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
+  .empty { color: var(--muted); padding: 12px 8px; }
+
+  .chip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 1px 9px; border-radius: 999px;
+          border: 1px solid var(--line); color: var(--text-2); white-space: nowrap; }
+  .chip.shrinking { color: #ff9a6e; border-color: #d9592666; background: #d9592614; }
+  .chip.growing { color: #8cbcff; border-color: #3987e566; background: #3987e514; }
+  .chip.warn { color: #f3c969; border-color: #c9850066; background: #c985001a; }
+
+  /* detail */
+  .back { background: none; border: 0; color: var(--text-2); padding: 0; margin-bottom: 10px; }
+  .back:hover { color: var(--text); }
+  .detail h2 { font-size: 21px; margin: 0 0 8px; letter-spacing: -.01em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .stat .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .v small { font-size: 13px; font-weight: 500; color: var(--text-2); }
+  .stat .r { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .trend { margin: 0 0 14px; color: var(--text-2); }
+  .trend p { margin: 4px 0; }
+  .chart-box { position: relative; height: 230px; margin: 6px 0 4px; cursor: pointer; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text-2); margin-top: 6px; }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12.5px; color: var(--muted); }
+  .flag { background: #c985000f; border: 1px solid #c9850040; border-radius: 10px; padding: 9px 12px; margin: 10px 0;
+          font-size: 13px; color: var(--text-2); }
+  .flag b { color: #f3c969; }
+
+  /* map */
+  #map { grid-area: map; background: var(--bg); position: relative; }
+  .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.85) saturate(.35); }
+  .leaflet-container { font: inherit; }
+  .leaflet-control-attribution { background: #0b0e13cc !important; color: var(--muted); }
+  .leaflet-control-attribution a { color: var(--text-2); }
+  .leaflet-bar a { background: var(--panel); color: var(--text); border-color: var(--line) !important; }
+  .leaflet-bar a:hover { background: var(--panel-2); }
+  .leaflet-tooltip { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px;
+                     box-shadow: 0 6px 20px #0008; padding: 6px 10px; }
+  .leaflet-tooltip-top:before { border-top-color: var(--line); }
+  .float { position: absolute; z-index: 500; background: #12161de6; backdrop-filter: blur(8px);
+           border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 10px 30px #0009; }
+  .timeline { left: 50%; transform: translateX(-50%); bottom: 22px; display: flex; align-items: center; gap: 10px; padding: 8px 10px; }
+  .play { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--accent); color: #08101c;
+          display: grid; place-items: center; flex: none; }
+  .play:hover { filter: brightness(1.1); }
+  .years { display: flex; gap: 2px; }
+  .years button { background: none; border: 0; border-radius: 8px; padding: 6px 8px; color: var(--muted);
+                  font-variant-numeric: tabular-nums; font-weight: 500; }
+  .years button:hover { color: var(--text); background: var(--panel-2); }
+  .years button[aria-pressed=true] { background: var(--panel-2); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+  .layers { top: 14px; right: 14px; padding: 10px 12px; font-size: 13px; display: grid; gap: 6px; }
+  .layers label { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-2); }
+  .layers input { accent-color: var(--accent); margin: 0; }
+  .yearbig { position: absolute; z-index: 450; left: 22px; bottom: 14px; font-size: 64px; font-weight: 700;
+             color: #ffffff38; letter-spacing: -.03em; pointer-events: none; font-variant-numeric: tabular-nums; }
+
+  /* about dialog */
+  dialog { max-width: 640px; width: calc(100% - 32px); background: var(--panel); color: var(--text); border: 1px solid var(--line);
+           border-radius: 16px; padding: 24px 28px; box-shadow: 0 30px 80px #000c; }
+  dialog::backdrop { background: #0009; backdrop-filter: blur(3px); }
+  dialog h2 { margin: 0 0 4px; font-size: 20px; }
+  dialog h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 20px 0 6px; }
+  dialog ul { padding-left: 18px; margin: 0; color: var(--text-2); } dialog li { margin: 5px 0; }
+  dialog table { border-collapse: collapse; width: 100%; font-size: 13px; color: var(--text-2); }
+  dialog td, dialog th { padding: 5px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+  dialog td:nth-child(n+2), dialog th:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+  .close { float: right; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; }
+
+  @media (max-width: 860px) {
+    body { grid-template: "brand" auto "map" 60vh "list" auto / minmax(0, 1fr); overflow: auto; }
+    aside { display: contents; }
+    .brand { grid-area: brand; background: var(--panel); padding: 12px 16px; }
+    .scroll { grid-area: list; overflow: visible; background: var(--panel); padding: 16px; min-width: 0; }
+    .layers { top: 10px; right: 10px; font-size: 12px; padding: 8px 10px; }
+    .timeline { bottom: 26px; left: 8px; right: 8px; transform: none; gap: 6px; padding: 6px; }
+    .years { flex: 1; justify-content: space-between; }
+    .years button { padding: 5px 2px; font-size: 12px; }
+    .leaflet-control-zoom { display: none; }
+    .leaflet-control-attribution { font-size: 10px; }
+    .play { width: 32px; height: 32px; }
+    .yearbig { display: none; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>LakeWatch Bengaluru</h1>
-  <label>Winter <input id="year" type="range" min="2018" max="2025" value="2025"> <b id="yearOut">2025</b></label>
-  <label><input id="mask" type="checkbox" checked> water <span style="color:var(--water)">■</span>
-    / vegetation <span style="color:var(--veg)">■</span> map</label>
-  <select id="pick"><option value="">Jump to a lake…</option></select>
-</header>
-<div id="map"></div>
 <aside>
-  <div id="lake">
-    <p>Open-water and vegetation extent of 34 Bengaluru lakes, measured from Sentinel-2 each winter (Jan-Feb), 2018-2025.
-      Lake outlines are coloured by their 2018-2025 open-water trend:
-      <b class="shrinking">shrinking</b>, <b class="growing">growing</b>, or <b style="color:var(--flat)">no clear trend</b>.
-      Click a lake for its numbers.</p>
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div><h1>LakeWatch Bengaluru</h1><p>34 lakes from space · 2018-2025</p></div>
+    <button id="aboutBtn">About</button>
   </div>
+  <div class="scroll" id="side"></div>
+</aside>
 
+<div id="map">
+  <div class="float layers">
+    <label><input type="checkbox" id="showCls" checked><span><span class="sw" style="background:var(--water)"></span>Open water
+      <span class="sw" style="background:var(--veg);margin-left:6px"></span>Vegetation</span></label>
+    <label><input type="checkbox" id="showRgb" checked>Sentinel-2 image</label>
+  </div>
+  <div class="float timeline" role="group" aria-label="Winter">
+    <button class="play" id="play" aria-label="Play years">
+      <svg width="14" height="14" viewBox="0 0 14 14" id="playIcon"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+    </button>
+    <div class="years" id="years"></div>
+  </div>
+  <div class="yearbig" id="yearBig"></div>
+</div>
+
+<dialog id="about">
+  <button class="close" onclick="this.closest('dialog').close()">Close</button>
+  <h2>About LakeWatch</h2>
+  <p style="color:var(--text-2)">How much open water and how much weed cover each lake had every winter (Jan-Feb), measured from
+    10 m Sentinel-2 satellite images. Water is where MNDWI &gt; 0; vegetation is NDVI &gt; 0.5 inside the lake outline.
+    Every number has a range, and the method was checked against hand-drawn maps of lakes it was never tuned on.</p>
   <h3>How far to trust this</h3>
   <ul>
-    <li><b>Water areas run low.</b> On 12 hand-labelled test lakes, the median open-water area error was 24% against
-      a target of 10% (missed). Dark, deep water is the main cause: the index used here (MNDWI &gt; 0) calls some of it land.</li>
-    <li>Interval coverage 83% (target 80-100%); pixel overlap with hand labels: water IoU 0.78, vegetation 0.74.</li>
-    <li>8 winters is too few to call a trend for most lakes. <i>No clear trend</i> means the data can't tell,
-      not that the lake is stable.</li>
+    <li><b>Water areas run low.</b> On 12 held-out test lakes the median water-area error was 24%, against a 10% target
+      (missed). Dark, deep water is the main cause: the water index calls some of it land.</li>
+    <li>The range around each area held the hand-labelled value 83% of the time (target 80-100%).</li>
+    <li>8 winters is too few to call a trend for most lakes. <i>No clear trend</i> means the data can't tell, not that the lake is stable.</li>
     <li>One person drew all hand labels; there is no second-annotator check yet.</li>
-    <li>Extent only: nothing here measures water quality or explains causes.</li>
+    <li>Extent only: nothing here measures water quality or depth, or explains causes.</li>
   </ul>
-  <h3>Lakes to read with care</h3>
-  <ul id="care"></ul>
-  <p class="muted">Contains modified Copernicus Sentinel data 2018-2025, accessed through Microsoft Planetary Computer.
-    Lake outlines © OpenStreetMap contributors (ODbL). Code MIT; LakeWatch data CC BY 4.0.</p>
-</aside>
+  <h3>Test results (12 lakes, 24 lake-years, scored once)</h3>
+  <table>
+    <tr><th>Measure</th><th>Result</th><th>Target</th></tr>
+    <tr><td>Median water-area error, clean lakes</td><td>24%</td><td>&le; 10% · missed</td></tr>
+    <tr><td>Range covers labelled area</td><td>83%</td><td>80-100% · met</td></tr>
+    <tr><td>Pixel overlap (IoU), water</td><td>0.78</td><td>&ge; 0.65 · met</td></tr>
+    <tr><td>Pixel overlap (IoU), vegetation</td><td>0.74</td><td>&ge; 0.60 · met</td></tr>
+  </table>
+  <h3>Credits</h3>
+  <p class="note">Contains modified Copernicus Sentinel data 2018-2025, accessed through Microsoft Planetary Computer.
+    Lake outlines and basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors (ODbL).
+    Code MIT; LakeWatch data CC BY 4.0. Methods, validation and limitations are documented in the project repository.</p>
+</dialog>
+
 <script>
-const COLOR = { shrinking: "var(--shrink)", growing: "var(--grow)", "no clear trend": "var(--flat)" };
-const HEX = { shrinking: "#d1452f", growing: "#1e6eff", "no clear trend": "#8a93a3" };
+const YEARS = DATA[0].year;
+const COL = { water: "#3987e5", veg: "#199e70" };
+const ARROW = { shrinking: "▼", growing: "▲" };
 const FLAG = {
-  "vegetated": "Mostly vegetation: in a typical winter over 60% of the lake is covered by weeds or other plants, so open water understates it.",
-  "wide interval": "Wide interval: the uncertainty range is wider than the open-water area itself (little or patchy open water).",
+  "vegetated": ["Mostly vegetation", "in a typical winter over 60% of the lake is covered by weeds or other plants, so open water understates it."],
+  "wide interval": ["Wide range", "the uncertainty range is wider than the open water itself (little or patchy open water)."],
 };
-const fmt = (x, d = 1) => (x > 0 ? "+" : "") + x.toFixed(d);
+const $ = id => document.getElementById(id);
+const fmt = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
+const ha = x => x < 10 ? x.toFixed(1) : Math.round(x).toString();
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const chip = v => v === "no clear trend" ? '<span class="chip">no clear trend</span>' : `<span class="chip ${v}">${ARROW[v]} ${v}</span>`;
+const byId = Object.fromEntries(DATA.map(l => [l.id, l]));
+let year = YEARS.at(-1), selected = null, filter = null, chart = null, timer = null, query = "", sort = "change";
+const yi = () => YEARS.indexOf(year);
 
-const map = L.map("map", { zoomSnap: 0.5 });
+/* ---------- map ---------- */
+const map = L.map("map", { zoomSnap: 0.5, zoomControl: false });
+L.control.zoom({ position: "bottomright" }).addTo(map);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-const rgb = L.layerGroup().addTo(map), cls = L.layerGroup().addTo(map);
-const outlines = L.featureGroup().addTo(map);
-const byId = {};
-let chart;
-
-for (const lake of DATA) {
-  byId[lake.id] = lake;
-  L.geoJSON(lake.geometry, { style: { color: HEX[lake.verdict], weight: 2.5, fill: false } })
-    .bindTooltip(lake.name).on("click", () => show(lake.id)).addTo(outlines);
-  document.getElementById("pick").add(new Option(lake.name, lake.id));
+  { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Copernicus Sentinel data' }).addTo(map);
+const rgbLayer = L.layerGroup().addTo(map), clsLayer = L.layerGroup().addTo(map), outlineLayer = L.featureGroup().addTo(map);
+const outlineStyle = id => selected === id
+  ? { color: "#fff", weight: 3, opacity: 1, dashArray: null, fillOpacity: 0 }
+  : { color: "#fff", weight: 1.2, opacity: .7, dashArray: "3 3", fillOpacity: 0 };
+const ov = {};
+for (const l of DATA) {
+  ov[l.id] = {
+    rgb: L.imageOverlay(`img/${l.id}_${year}_rgb.webp`, l.bounds).addTo(rgbLayer),
+    cls: L.imageOverlay(`img/${l.id}_${year}_cls.png`, l.bounds, { opacity: .9 }).addTo(clsLayer),
+    line: L.geoJSON(l.geometry, { style: () => outlineStyle(l.id) })
+      .bindTooltip(() => `<b>${esc(l.name)}</b><br>${ha(l.area[yi()])} ha open water in ${year}`, { sticky: true, direction: "top" })
+      .on("click", () => select(l.id, true)).addTo(outlineLayer),
+  };
 }
-[...document.getElementById("pick").options].slice(1).sort((a, b) => a.text.localeCompare(b.text))
-  .forEach(o => document.getElementById("pick").add(o));
-map.fitBounds(outlines.getBounds());
+const home = () => map.fitBounds(outlineLayer.getBounds(), { padding: [30, 30] });
+home();
+$("showRgb").onchange = e => e.target.checked ? map.addLayer(rgbLayer) : map.removeLayer(rgbLayer);
+$("showCls").onchange = e => e.target.checked ? map.addLayer(clsLayer) : map.removeLayer(clsLayer);
 
-function drawYear() {
-  const y = document.getElementById("year").value;
-  document.getElementById("yearOut").textContent = y;
-  rgb.clearLayers(); cls.clearLayers();
-  for (const lake of DATA) {
-    L.imageOverlay(`img/${lake.id}_${y}_rgb.jpg`, lake.bounds).addTo(rgb);
-    if (document.getElementById("mask").checked) L.imageOverlay(`img/${lake.id}_${y}_cls.png`, lake.bounds).addTo(cls);
+/* ---------- year ---------- */
+$("years").innerHTML = YEARS.map(y => `<button data-y="${y}">${y}</button>`).join("");
+$("years").onclick = e => e.target.dataset.y && (stop(), setYear(+e.target.dataset.y));
+function setYear(y) {
+  year = y;
+  for (const b of $("years").children) b.setAttribute("aria-pressed", +b.dataset.y === y);
+  $("yearBig").textContent = y;
+  for (const l of DATA) {
+    ov[l.id].rgb.setUrl(`img/${l.id}_${y}_rgb.webp`);
+    ov[l.id].cls.setUrl(`img/${l.id}_${y}_cls.png`);
   }
+  render();
 }
-document.getElementById("year").oninput = drawYear;
-document.getElementById("mask").onchange = drawYear;
-document.getElementById("pick").onchange = e => e.target.value && show(e.target.value, true);
-drawYear();
-if (byId[location.hash.slice(1)]) show(location.hash.slice(1), true);
+const PLAY = '<path d="M3 1.5v11l9-5.5z" fill="currentColor"/>', PAUSE = '<path d="M2.5 1.5h3v11h-3zM8.5 1.5h3v11h-3z" fill="currentColor"/>';
+function stop() { clearInterval(timer); timer = null; $("playIcon").innerHTML = PLAY; $("play").ariaLabel = "Play years"; }
+$("play").onclick = () => {
+  if (timer) return stop();
+  $("playIcon").innerHTML = PAUSE; $("play").ariaLabel = "Pause";
+  if (yi() === YEARS.length - 1) setYear(YEARS[0]);
+  timer = setInterval(() => setYear(YEARS[(yi() + 1) % YEARS.length]), 1100);
+};
+// warm the browser cache so playback doesn't flicker
+addEventListener("load", () => setTimeout(() => DATA.forEach(l => YEARS.forEach(y => {
+  new Image().src = `img/${l.id}_${y}_rgb.webp`; new Image().src = `img/${l.id}_${y}_cls.png`;
+})), 800));
 
-document.getElementById("care").innerHTML = DATA.filter(l => l.flags.length)
-  .sort((a, b) => a.name.localeCompare(b.name))
-  .map(l => `<li><a onclick="show('${l.id}', true)">${l.name}</a>: ${l.flags.join(", ")}</li>`).join("");
-
-function trendText(verdict, slope, lo, hi) {
-  const ci = lo == null ? "" : ` (90% CI ${fmt(lo)} to ${fmt(hi)})`;
-  return verdict === "no clear trend" ? `no clear trend; slope ${fmt(slope)} ha/yr${ci}`
-    : `<b class="${verdict}">${verdict}</b> ${fmt(slope)} ha/yr${ci}`;
+/* ---------- sidebar: lake list ---------- */
+const counts = DATA.reduce((c, l) => (c[l.verdict] = (c[l.verdict] || 0) + 1, c), {});
+function spark(l) {
+  const w = 76, h = 26, max = Math.max(...l.area, 0.01);
+  const pts = l.area.map((v, i) => [(i / (l.area.length - 1)) * (w - 6) + 3, h - 4 - (v / max) * (h - 8)]);
+  const [cx, cy] = pts[yi()];
+  return `<svg width="${w}" height="${h}" aria-hidden="true"><polyline points="${pts.join(" ")}" fill="none" stroke="${COL.water}"
+    stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/></svg>`;
 }
-function show(id, zoom) {
-  const l = byId[id];
-  if (zoom) map.fitBounds(l.bounds);
-  const i = l.year.length - 1;
-  const conf = l.flags.length ? '<span class="badge warn">lower confidence</span>' : '<span class="badge">higher confidence</span>';
-  const split = l.split === "train" ? "" : `<span class="badge">hand-labelled (${l.split} set)</span>`;
-  document.getElementById("lake").innerHTML = `
-    <h2>${l.name}</h2>
-    <div>${conf}${split}</div>
-    <p>Open water ${l.year[0]}: <b>${l.area[0].toFixed(1)} ha</b> → ${l.year[i]}: <b>${l.area[i].toFixed(1)} ha</b>
-      <span class="muted">(range ${l.area_lo[i].toFixed(1)}-${l.area_hi[i].toFixed(1)})</span><br>
-      Open-water trend: ${trendText(l.verdict, l.slope, l.slope_lo, l.slope_hi)}<br>
-      Vegetation trend: ${trendText(l.verdict_veg, l.slope_veg)}</p>
-    ${l.flags.map(f => `<p class="muted">⚠ ${FLAG[f]}</p>`).join("")}
-    <canvas id="chart" height="230"></canvas>
-    <p class="muted">Shaded band: open-water area range (index threshold ±0.2 plus half a pixel at the shoreline).
-      Open water is counted up to 150 m beyond the lake outline; vegetation only inside it.</p>`;
+function listView() {
+  const tiles = [["all", DATA.length, "lakes"], ["shrinking", counts.shrinking || 0, "▼ shrinking"],
+                 ["growing", counts.growing || 0, "▲ growing"], ["no clear trend", counts["no clear trend"] || 0, "no clear trend"]];
+  const key = { change: l => (l.verdict === "no clear trend") * 1e6 - Math.abs(l.slope), name: l => l.name, size: l => -l.area[yi()] }[sort];
+  const rows = DATA.filter(l => (!filter || l.verdict === filter) && l.name.toLowerCase().includes(query))
+    .sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0));
+  const opt = (v, t) => `<option value="${v}"${sort === v ? " selected" : ""}>${t}</option>`;
+  return `
+    <div class="tiles">${tiles.map(([k, n, t]) =>
+      `<button class="tile" data-f="${k}" aria-pressed="${(filter || "all") === k}"><b>${n}</b><span>${t}</span></button>`).join("")}</div>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search lakes" value="${esc(query)}" aria-label="Search lakes">
+      <select id="sort" aria-label="Sort">${opt("change", "Biggest change")}${opt("size", "Most water")}${opt("name", "Name")}</select>
+    </div>
+    <div>${rows.map(l => `
+      <button class="lake-row" data-id="${l.id}">
+        <span><div class="nm">${esc(l.name)}</div><div class="sub">${chip(l.verdict)}${l.flags.length ? " ⚠" : ""}</div></span>
+        ${spark(l)}
+        <span class="val">${ha(l.area[yi()])}<small>ha · ${year}</small></span>
+      </button>`).join("") || '<div class="empty">No lakes match.</div>'}</div>`;
+}
+
+/* ---------- sidebar: lake detail ---------- */
+function trendLine(label, verdict, slope, lo, hi) {
+  const ci = lo == null ? "" : ` <span class="note">(90% range ${fmt(lo)} to ${fmt(hi)})</span>`;
+  return `<p>${label}: ${chip(verdict)} ${fmt(slope)} ha/yr${ci}</p>`;
+}
+function detailView(l) {
+  const i = yi();
+  return `<div class="detail">
+    <button class="back" id="back">← All lakes</button>
+    <h2>${esc(l.name)}</h2>
+    <div class="chips">
+      ${l.flags.length ? '<span class="chip warn">⚠ lower confidence</span>' : '<span class="chip">higher confidence</span>'}
+      ${l.split && l.split !== "train" ? `<span class="chip">✎ hand-labelled (${l.split} set)</span>` : ""}
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="k">Open water · ${year}</div><div class="v">${ha(l.area[i])} <small>ha</small></div>
+        <div class="r">range ${ha(l.area_lo[i])}-${ha(l.area_hi[i])} ha</div></div>
+      <div class="stat"><div class="k">Vegetation · ${year}</div><div class="v">${ha(l.veg_ha[i])} <small>ha</small></div>
+        <div class="r">inside the lake outline</div></div>
+    </div>
+    <div class="trend">
+      ${trendLine("Open water", l.verdict, l.slope, l.slope_lo, l.slope_hi)}
+      ${trendLine("Vegetation", l.verdict_veg, l.slope_veg)}
+    </div>
+    ${l.flags.map(f => `<div class="flag"><b>⚠ ${FLAG[f][0]}:</b> ${FLAG[f][1]}</div>`).join("")}
+    <div class="chart-box"><canvas id="chart" role="img" aria-label="Open water and vegetation area by year"></canvas></div>
+    <div class="legend">
+      <span><span class="sw" style="background:${COL.water}"></span>Open water</span>
+      <span><span class="sw" style="background:#3987e544"></span>Range</span>
+      <span><span class="sw" style="background:${COL.veg}"></span>Vegetation</span>
+      ${l.labelled.some(v => v != null) ? '<span><b style="margin-right:5px">✕</b>Hand-labelled water</span>' : ""}
+    </div>
+    <p class="note">Click the chart to jump to a year. Open water is counted up to 150 m beyond the lake outline;
+      vegetation only inside it. Range = water index threshold ±0.2 plus half a pixel along the shoreline.</p>
+  </div>`;
+}
+const yearLine = { id: "yearLine", afterDatasetsDraw(c) {
+  const x = c.scales.x.getPixelForValue(yi()), { top, bottom } = c.chartArea, g = c.ctx;
+  g.save(); g.strokeStyle = "#ffffff66"; g.lineWidth = 1; g.setLineDash([3, 3]);
+  g.beginPath(); g.moveTo(x, top); g.lineTo(x, bottom); g.stroke(); g.restore();
+} };
+Chart.defaults.color = "#8790a0"; Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+function drawChart(l) {
   chart?.destroy();
-  chart = new Chart(document.getElementById("chart"), {
+  const line = (label, data, color) => ({ label, data, borderColor: color, backgroundColor: color, borderWidth: 2,
+    pointRadius: 4, pointHoverRadius: 6, pointBorderColor: "#12161d", pointBorderWidth: 2, tension: .25 });
+  chart = new Chart($("chart"), {
     type: "line",
-    data: { labels: l.year, datasets: [
-      { label: "low", data: l.area_lo, borderWidth: 0, pointRadius: 0 },
-      { label: "range", data: l.area_hi, borderWidth: 0, pointRadius: 0, fill: "-1", backgroundColor: "rgba(30,110,255,.15)" },
-      { label: "Open water (ha)", data: l.area, borderColor: "#1e6eff", backgroundColor: "#1e6eff" },
-      { label: "Vegetation in lake (ha)", data: l.veg_ha, borderColor: "#28be3c", backgroundColor: "#28be3c", borderDash: [4, 3] },
-      { label: "Hand-labelled water (ha)", data: l.labelled, showLine: false, pointStyle: "crossRot", pointRadius: 8,
-        borderColor: "#1d2330", borderWidth: 2 },
+    data: { labels: YEARS, datasets: [
+      { label: "low", data: l.area_lo, borderWidth: 0, pointRadius: 0, pointHitRadius: 0 },
+      { label: "Range", data: l.area_hi, borderWidth: 0, pointRadius: 0, pointHitRadius: 0, fill: "-1", backgroundColor: "#3987e533" },
+      line("Open water", l.area, COL.water),
+      line("Vegetation", l.veg_ha, COL.veg),
+      { label: "Hand-labelled", data: l.labelled, showLine: false, pointStyle: "crossRot", pointRadius: 7, borderColor: "#eef1f5", borderWidth: 2 },
     ] },
-    options: { animation: false, spanGaps: false, scales: { y: { beginAtZero: true, title: { display: true, text: "ha" } } },
-      plugins: { legend: { labels: { filter: i => i.text !== "low", boxWidth: 12 } },
-        tooltip: { filter: i => i.dataset.label !== "low" } } },
+    plugins: [yearLine],
+    options: {
+      maintainAspectRatio: false, animation: false,
+      interaction: { mode: "index", intersect: false },
+      onClick: (e, _, c) => { const y = YEARS[Math.round(c.scales.x.getValueForPixel(e.x))]; if (y) { stop(); setYear(y); } },
+      scales: {
+        x: { grid: { display: false }, border: { color: "#262c37" } },
+        y: { beginAtZero: true, grid: { color: "#262c3799" }, border: { display: false }, title: { display: true, text: "hectares" } },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: "#12161d", borderColor: "#262c37", borderWidth: 1, titleColor: "#eef1f5", bodyColor: "#b4bccb",
+          padding: 10, usePointStyle: true, filter: i => i.dataset.label !== "low" && i.raw != null,
+          callbacks: { label: i => i.dataset.label === "Range"
+            ? ` Range: ${ha(l.area_lo[i.dataIndex])}-${ha(l.area_hi[i.dataIndex])} ha`
+            : ` ${i.dataset.label}: ${ha(i.raw)} ha` } },
+      },
+    },
   });
 }
+
+/* ---------- glue ---------- */
+function render() {
+  const l = byId[selected];
+  if (l) {
+    $("side").innerHTML = detailView(l); drawChart(l);
+    $("back").onclick = () => select(null);
+    return;
+  }
+  const refocus = document.activeElement?.id === "q";
+  $("side").innerHTML = listView();
+  if (refocus) { const q = $("q"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+  $("q").oninput = e => { query = e.target.value.toLowerCase(); render(); };
+  $("sort").onchange = e => { sort = e.target.value; render(); };
+  document.querySelectorAll(".tile").forEach(b => b.onclick = () => { filter = b.dataset.f === "all" ? null : b.dataset.f; render(); });
+  document.querySelectorAll(".lake-row").forEach(b => {
+    const line = ov[b.dataset.id].line;
+    b.onclick = () => select(b.dataset.id, true);
+    b.onmouseenter = () => line.setStyle({ weight: 3, opacity: 1, dashArray: null });
+    b.onmouseleave = () => line.setStyle(outlineStyle(b.dataset.id));
+  });
+}
+function select(id, zoom) {
+  const prev = selected; selected = id;
+  for (const k of [prev, id]) if (k) ov[k].line.setStyle(outlineStyle(k));
+  history.replaceState(null, "", id ? `#${id}` : location.pathname);
+  if (id && zoom) map.flyToBounds(byId[id].bounds, { padding: [40, 40], duration: .8 });
+  if (!id) map.flyToBounds(outlineLayer.getBounds(), { padding: [30, 30], duration: .8 });
+  render();
+  $("side").scrollTop = 0;
+}
+$("aboutBtn").onclick = () => $("about").showModal();
+addEventListener("keydown", e => {
+  if (["INPUT", "SELECT"].includes(e.target.tagName) || $("about").open) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+    stop(); setYear(YEARS[Math.min(Math.max(yi() + (e.key === "ArrowRight" ? 1 : -1), 0), YEARS.length - 1)]);
+  }
+  if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("play").click(); }
+  if (e.key === "Escape" && selected) select(null);
+});
+setYear(year);
+if (byId[location.hash.slice(1)]) select(location.hash.slice(1), true);
 </script>
 </body>
 </html>

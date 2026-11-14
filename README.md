@@ -53,9 +53,10 @@ uv run pytest
 
 ## Demo site (2026-11-14)
 
-`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `lakewatch site` writes its data (`site/data.js`, `site/img/`, 3.5 MB, gitignored until D12 is settled). It shows:
+`site/index.html` is a static page (serve the folder with any static server; opened as a file, OSM refuses the map tiles); `lakewatch site` writes its data (`site/data.js`, `site/img/`, 2.6 MB, gitignored until D12 is settled). It shows:
 
-- a map with a winter year slider, overlaying each lake's Sentinel-2 true-colour composite and the frozen water/veg map;
+- a dark map with year buttons and a play button, overlaying each lake's Sentinel-2 true-colour composite (clipped to the lake region) and the frozen water/veg map;
+- a searchable, sortable lake list with sparklines, and filter tiles by trend verdict;
 - lake outlines coloured by trend verdict;
 - per lake, an area chart with the interval band, the vegetation series and the hand-labelled areas;
 - a "lakes to read with care" panel listing vegetated lakes (median veg cover > 0.6) and lakes with wide intervals (median interval wider than the area);

@@ -258,8 +258,8 @@ def site(out: Path = Path("site")):
 
 
 def _overlays(c, cfg: dict, stem: Path) -> list:
-    """Write <stem>_rgb.jpg (true colour) and <stem>_cls.png (water blue, veg green, rest transparent),
-    both reprojected to web mercator so Leaflet can place them by lat/lon bounds. Returns the bounds."""
+    """Write <stem>_rgb.webp (true colour, clipped to the lake region) and <stem>_cls.png (water, veg;
+    rest transparent), reprojected to web mercator so Leaflet can place them by lat/lon bounds. Returns the bounds."""
     c["cls"] = (
         ("y", "x"),
         evaluation.classify(
@@ -267,11 +267,12 @@ def _overlays(c, cfg: dict, stem: Path) -> list:
             cfg["water_t"], cfg["veg_t"],
         ).astype("float32"),  # float + NaN nodata: as uint8, reproject treats LAND (0) as nodata and fills it
     )  # fmt: skip
-    w = c[["B04", "B03", "B02", "cls"]].odc.reproject("EPSG:3857", resampling="nearest")
-    rgb = np.nan_to_num(np.clip(np.stack([w.B04, w.B03, w.B02], -1) / 0.3, 0, 1))
-    imsave(f"{stem}_rgb.jpg", (rgb * 255).astype("uint8"))
-    rgba = np.array([[0, 0, 0, 0], [30, 110, 255, 210], [40, 190, 60, 210]], "uint8")  # LAND, WATER, VEG
-    imsave(f"{stem}_cls.png", rgba[np.nan_to_num(w.cls.values).astype(int)], check_contrast=False)
+    c["alpha"] = c["inside"].astype("float32")
+    w = c[["B04", "B03", "B02", "cls", "alpha"]].odc.reproject("EPSG:3857", resampling="nearest")
+    rgba = np.nan_to_num(np.clip(np.stack([w.B04, w.B03, w.B02, w.alpha], -1) / [0.3, 0.3, 0.3, 1], 0, 1))
+    imsave(f"{stem}_rgb.webp", (rgba * 255).astype("uint8"))
+    lut = np.array([[0, 0, 0, 0], [57, 135, 229, 225], [25, 158, 112, 225]], "uint8")  # LAND, WATER, VEG
+    imsave(f"{stem}_cls.png", lut[np.nan_to_num(w.cls.values).astype(int)], check_contrast=False)
     b = w.odc.geobox.extent.to_crs(4326).boundingbox
     return [[b.bottom, b.left], [b.top, b.right]]
 

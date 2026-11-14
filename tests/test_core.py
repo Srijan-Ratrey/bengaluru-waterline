@@ -143,5 +143,5 @@ def test_site_overlay_keeps_land_transparent(tmp_path):
     c["dw_water"] = (("y", "x"), dw)
     bounds = _overlays(c, {"method": "mndwi", "water_t": 0.0, "veg_t": 0.5}, tmp_path / "x")
     rgba = imread(tmp_path / "x_cls.png").reshape(-1, 4)
-    assert 0.4 < (rgba[:, 2] == 255).mean() < 0.6  # half water as in the source; ~0.87 if land is filled
+    assert 0.4 < (rgba[:, 2] == 229).mean() < 0.6  # half water as in the source; ~0.87 if land is filled
     assert bounds[0][0] < bounds[1][0] and bounds[0][1] < bounds[1][1]
