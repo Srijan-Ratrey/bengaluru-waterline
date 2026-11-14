@@ -15,6 +15,8 @@ uv run lakewatch measure                                 # all lakes x years -> 
 uv run lakewatch sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
 uv run lakewatch label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
 uv run lakewatch evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
+uv run lakewatch trends                                  # per-lake areas + trends at the frozen method
+uv run lakewatch site                                    # demo data -> site/; then open site/index.html
 uv run pytest
 ```
 
@@ -47,6 +49,18 @@ uv run pytest
 - **Vegetation inside the lake:** 1 growing (Gattahalli), 33 no clear trend.
 - **Why so few:** 8 winters is low power, and year-to-year swings are large (Hosakote: 180, 24, 25, 22, 233, 257, 235, 22 ha). "No clear trend" means the data can't tell, not that a lake is stable.
 - Caveats: areas carry the test-set undercount of dark water (above); per-year intervals are not propagated into the slope CI; extent only, no causes.
+
+## Demo site (2026-11-14)
+
+`site/index.html` is a static page that needs no server; `lakewatch site` writes its data (`site/data.js`, `site/img/`, 3.5 MB, gitignored until D12 is settled). It shows:
+
+- a map with a winter year slider, overlaying each lake's Sentinel-2 true-colour composite and the frozen water/veg map;
+- lake outlines coloured by trend verdict;
+- per lake, an area chart with the interval band, the vegetation series and the hand-labelled areas;
+- a "lakes to read with care" panel listing vegetated lakes (median veg cover > 0.6) and lakes with wide intervals (median interval wider than the area);
+- the test-set misses stated up front.
+
+`#<lake_id>` in the URL opens a lake directly. Not yet hosted: GitHub Pages on a private repo needs a paid plan, and publishing waits on D12.
 
 ## Findings so far (verified 2026-10-26)
 

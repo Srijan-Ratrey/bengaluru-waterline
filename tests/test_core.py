@@ -5,7 +5,9 @@ import shapely
 import xarray as xr
 from odc.geo.geobox import GeoBox
 from odc.geo.xr import xr_coords
+from skimage.io import imread
 
+from lakewatch.cli import _overlays
 from lakewatch.composite import load, save, to_reflectance
 from lakewatch.indices import area_ha, area_interval, edge_ha, measure, mndwi, ndwi, threshold
 from lakewatch.labels import LAND, VEG, WATER, rasterize, split
@@ -42,11 +44,11 @@ def test_otsu_splits_water_from_land_and_area():
     assert threshold(idx, inside, "zero") == 0.0
 
 
-def _toy_composite():
-    """4x4 grid: left half water (green high, NIR/SWIR low), right half land."""
-    gb = GeoBox.from_bbox((0, 0, 40, 40), "EPSG:32643", resolution=10)
-    water = np.zeros((4, 4), bool)
-    water[:, :2] = True
+def _toy_composite(n: int = 4):
+    """n x n grid: left half water (green high, NIR/SWIR low), right half land."""
+    gb = GeoBox.from_bbox((0, 0, 10 * n, 10 * n), "EPSG:32643", resolution=10)
+    water = np.zeros((n, n), bool)
+    water[:, : n // 2] = True
     band = lambda w, l: (("y", "x"), np.where(water, w, l).astype("float32"))
     c = xr.Dataset(
         {
@@ -59,7 +61,7 @@ def _toy_composite():
         },
         coords=xr_coords(gb),
     )
-    c["inside"] = (("y", "x"), np.ones((4, 4), bool))
+    c["inside"] = (("y", "x"), np.ones((n, n), bool))
     c["lake"] = (("y", "x"), water)
     c.attrs = {"n_scenes": 3, "valid_frac": 1.0}
     return c, np.where(water, 0.9, 0.1).astype("float32")
@@ -134,3 +136,12 @@ def test_trends_flag_only_clear_monotonic_change():
     t = trends(a, "area").set_index("lake_id")
     assert t.loc["down", "slope"] == -2 and t.loc["down", "verdict"] == "shrinking"
     assert t.loc["flat", "verdict"] == "no clear trend" and t.loc["noisy", "verdict"] == "no clear trend"
+
+
+def test_site_overlay_keeps_land_transparent(tmp_path):
+    c, dw = _toy_composite(40)  # left half water, right half land; 4x4 is too small to show the fill bug
+    c["dw_water"] = (("y", "x"), dw)
+    bounds = _overlays(c, {"method": "mndwi", "water_t": 0.0, "veg_t": 0.5}, tmp_path / "x")
+    rgba = imread(tmp_path / "x_cls.png").reshape(-1, 4)
+    assert 0.4 < (rgba[:, 2] == 255).mean() < 0.6  # half water as in the source; ~0.87 if land is filled
+    assert bounds[0][0] < bounds[1][0] and bounds[0][1] < bounds[1][1]

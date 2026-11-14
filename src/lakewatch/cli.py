@@ -16,7 +16,7 @@ from lakewatch import dynworld, labels, stac, trends
 from lakewatch import evaluate as evaluation
 from lakewatch import lakes as lakes_mod
 from lakewatch.indices import measure as measure_lake_year
-from lakewatch.indices import mndwi
+from lakewatch.indices import mndwi, ndvi
 
 app = typer.Typer(no_args_is_help=True)
 AOI = Path("configs/aoi.geojson")
@@ -221,6 +221,57 @@ def trends_cmd(alpha: float = 0.1):
     typer.echo(t.sort_values("slope")[cols].round(2).to_string(index=False))
     typer.echo(f"\nwater (q < {alpha}, Benjamini-Hochberg): {t.verdict.value_counts().to_dict()}")
     typer.echo(f"veg:   {t.verdict_veg.value_counts().to_dict()}")
+
+
+@app.command()
+def site(out: Path = Path("site")):
+    """Static demo data for site/index.html: per lake-year image overlays + data.js. Run `trends` first."""
+    exp = tomllib.loads(EXPERIMENT.read_text())
+    g = gpd.read_file(LAKES).set_index("lake_id")
+    a = pd.read_parquet("data/areas.parquet").sort_values("year")
+    t = pd.read_parquet("data/trends.parquet").set_index("lake_id").round(3)
+    split = {lake: k for k, v in json.loads(SPLIT.read_text()).items() if k != "seed" for lake in v}
+    veg = pd.read_parquet(OBS).query("method == 'mndwi_zero'").groupby("lake_id")["veg_frac"].median()
+    truth = pd.concat(pd.read_parquet(f"data/eval_{s}.parquet") for s in ("val", "test"))
+    truth = truth.set_index(["lake_id", "year"])["area_true"]
+    (out / "img").mkdir(parents=True, exist_ok=True)
+    lakes = []
+    for lake, s in a.groupby("lake_id"):
+        for p in sorted(COMPOSITES.glob(f"{lake}_*_winter.tif")):
+            bounds = _overlays(comp.load(p), exp["method"], out / "img" / p.stem.removesuffix("_winter"))
+        flags = {
+            "vegetated": veg[lake] > exp["veg_lake_cutoff"],
+            "wide interval": ((s.area_hi - s.area_lo) / s.area.clip(lower=0.5)).median() > 1,
+        }
+        tr = t.loc[lake, ["verdict", "slope", "slope_lo", "slope_hi", "q", "verdict_veg", "slope_veg"]]
+        lakes.append(
+            {"id": lake, "name": g.name[lake], "split": split.get(lake), "bounds": bounds,
+             "flags": [k for k, on in flags.items() if on], "geometry": g.geometry[lake].__geo_interface__}
+            | tr.to_dict()
+            | s[["year", "area", "area_lo", "area_hi", "water_ha", "veg_ha", "land_ha"]].round(2).to_dict("list")
+            | {"labelled": [truth.get((lake, y)) for y in s.year]}
+        )  # fmt: skip
+    (out / "data.js").write_text("const DATA = " + json.dumps(lakes, allow_nan=False) + ";\n")
+    typer.echo(f"{len(lakes)} lakes -> {out}; open {out / 'index.html'}")
+
+
+def _overlays(c, cfg: dict, stem: Path) -> list:
+    """Write <stem>_rgb.jpg (true colour) and <stem>_cls.png (water blue, veg green, rest transparent),
+    both reprojected to web mercator so Leaflet can place them by lat/lon bounds. Returns the bounds."""
+    c["cls"] = (
+        ("y", "x"),
+        evaluation.classify(
+            evaluation.scores(c)[cfg["method"]], ndvi(c).values, c["inside"].values, c["lake"].values,
+            cfg["water_t"], cfg["veg_t"],
+        ).astype("float32"),  # float + NaN nodata: as uint8, reproject treats LAND (0) as nodata and fills it
+    )  # fmt: skip
+    w = c[["B04", "B03", "B02", "cls"]].odc.reproject("EPSG:3857", resampling="nearest")
+    rgb = np.nan_to_num(np.clip(np.stack([w.B04, w.B03, w.B02], -1) / 0.3, 0, 1))
+    imsave(f"{stem}_rgb.jpg", (rgb * 255).astype("uint8"))
+    rgba = np.array([[0, 0, 0, 0], [30, 110, 255, 210], [40, 190, 60, 210]], "uint8")  # LAND, WATER, VEG
+    imsave(f"{stem}_cls.png", rgba[np.nan_to_num(w.cls.values).astype(int)], check_contrast=False)
+    b = w.odc.geobox.extent.to_crs(4326).boundingbox
+    return [[b.bottom, b.left], [b.top, b.right]]
 
 
 def _group(lock: list[dict]) -> dict:
