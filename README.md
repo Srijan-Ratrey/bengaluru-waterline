@@ -17,13 +17,13 @@ Docs: [METHODS](docs/METHODS.md) · [VALIDATION](docs/VALIDATION.md) · [LIMITAT
 ```sh
 uv sync
 uv run waterline lakes                                   # OSM -> configs/lakes.geojson (committed, pinned)
-uv run waterline lock                                    # -> data/scenes.lock.json + clear-day counts
-export EE_PROJECT=<your-earth-engine-project>          # free non-commercial project; `uv run earthengine authenticate` once
-uv run waterline measure                                 # all lakes x years -> data/observations.parquet
+uv run waterline lock                                    # -> data/scenes.lock.json (winter + pre-monsoon) + clear-day counts
+export EE_PROJECT=<your-earth-engine-project>          # optional: Dynamic World cross-check only; `uv run earthengine authenticate` once
+uv run waterline measure                                 # all lakes x years x seasons -> data/observations.parquet
 uv run waterline sheet                                   # per-lake PNG: years x (RGB, MNDWI, DW) -> data/sheets/
 uv run waterline label-prep                              # frozen split + QGIS inputs; see docs/LABELLING.md
 uv run waterline evaluate val                            # tune on val lakes; `evaluate test` once settings are frozen
-uv run waterline trends                                  # per-lake areas + trends at the frozen method
+uv run waterline trends                                  # per-lake areas + trends (both seasons) at the frozen method
 uv run waterline site                                    # demo data -> site/
 uv run python -m http.server -d site                     # then open http://localhost:8000 (not the file directly: OSM blocks file:// map tiles)
 uv run pytest
@@ -50,17 +50,18 @@ uv run pytest
 - **Dynamic World** is the best single method on large clean lakes (Madiwala IoU 0.92-0.94) but misses most of weed-margined Hosakote 2018 (21 vs 207 ha).
 - **Limits:** one annotator (no agreement ceiling yet), 3 clean val lakes, small lakes dominate the interval width.
 
-## Trends 2018-2025 (2026-11-13; 10 lakes added 2026-11-14)
+## Trends 2018-2025 (winter + pre-monsoon, 2026-11-15)
 
-`uv run waterline trends` -> `data/areas.parquet` (per lake-year: water area with `area_lo`/`area_hi`, and water/veg/land ha inside the lake) and `data/trends.parquet`. Per lake: Theil-Sen slope with scipy's rank-based 90% CI (used instead of a bootstrap: 8 points is too few to resample), Mann-Kendall p (Kendall tau vs year), Benjamini-Hochberg q across all 44 lakes, verdict at q < 0.1.
+`uv run waterline trends` -> `data/areas.parquet` (per lake, year and season: water area with `area_lo`/`area_hi`, and water/veg/land ha inside the lake) and `data/trends.parquet`. Per lake, over 16 readings (winter Jan-Feb and pre-monsoon Mar-mid May, 2018-2025): seasonal Mann-Kendall with an exact p from all 40,320 orderings of the years (each year's two readings move together, because they are not independent), seasonal Theil-Sen slope with a 90% CI, Benjamini-Hochberg q across all 44 lakes, verdict at q < 0.1. Details in [METHODS](docs/METHODS.md#5-trends-waterline-trends).
 
-- **Open water:** 2 lakes shrinking (Gattahalli -1.5 ha/yr, Hommadevanahalli -0.3 ha/yr), 1 growing (Horamavu Agara +1.8 ha/yr), **31 no clear trend**.
-- **Vegetation inside the lake:** 1 growing (Gattahalli), 33 no clear trend.
-- **10 lakes added on request** (2026-11-14, `waterline add-lakes`): Agara, Hebbal, Jakkur, Rachenahalli, Kaikondrahalli, Sankey Tank, Lalbagh Tank, Puttenahalli (Yelahanka), Yellamallappa Chetty and Muthanalluru. They are well-known lakes the random draw missed, tagged `sample=added` in [configs/lakes.geojson](configs/lakes.geojson), measured only and never labelled.
-  - All 10 come out as no clear trend for both water and vegetation. The nearest to a verdict is Muthanalluru, at 65 -> 13 ha and -6.5 ha/yr (90% CI -11.3 to -1.2), but q = 0.17.
-  - Adding them didn't change any verdict among the 34. The counts above are for the random 34; statements about Bengaluru lakes in general should use only those.
-- **Why so few:** 8 winters is low power, and year-to-year swings are large (Hosakote: 180, 24, 25, 22, 233, 257, 235, 22 ha). "No clear trend" means the data can't tell, not that a lake is stable.
-- Caveats: areas carry the test-set undercount of dark water (above); per-year intervals are not propagated into the slope CI; extent only, no causes.
+- **Open water:** 1 lake shrinking (Gattahalli, 24.8 -> 16.1 ha, -1.7 ha/yr, 90% CI -2.1 to -1.0), 1 growing (Horamavu Agara, 0.1 -> 11.5 ha, +1.9 ha/yr), **42 no clear trend**.
+- **Vegetation inside the lake:** 2 growing (Gattahalli +1.5 ha/yr, Singanayakanahalli +0.5 ha/yr), 42 no clear trend.
+- **Next closest:** Hommadevanahalli (-0.3 ha/yr) and Bagaluru Kere (+2.7 ha/yr) both have p ≈ 0.01 and q = 0.105, just past the cut-off. 11 lakes have p < 0.05 on their own; about 2 of 44 would get there by chance.
+- **Adding the pre-monsoon season didn't give more verdicts.** Winter alone (`--seasons winter`) gives 3 (Hommadevanahalli shrinking as well). A lake's two readings in a year move together (median rank correlation 0.79; pre-monsoon water is typically 89% of winter's), so the second season mostly repeats the first, and the test, correctly, gives it little extra weight.
+- **The random 34 on their own:** correcting over only the 34 randomly drawn lakes gives 4 water verdicts: Gattahalli and Hommadevanahalli shrinking, Horamavu Agara and Bagaluru Kere growing. The 10 added lakes (below) have no verdicts and widen the correction. The site uses the pre-specified 44-lake correction; statements about Bengaluru lakes in general should use the random 34.
+- **10 lakes added on request** (2026-11-14, `waterline add-lakes`): Agara, Hebbal, Jakkur, Rachenahalli, Kaikondrahalli, Sankey Tank, Lalbagh Tank, Puttenahalli (Yelahanka), Yellamallappa Chetty and Muthanalluru. They are well-known lakes the random draw missed, tagged `sample=added` in [configs/lakes.geojson](configs/lakes.geojson), measured only and never labelled. All 10 come out as no clear trend; the nearest is Muthanalluru (65 -> 13 ha, -7.7 ha/yr, 90% CI -11.3 to -1.6, q = 0.12).
+- **Why so few:** 8 years is the real limit, and year-to-year swings are large (Hosakote: 180, 24, 25, 22, 233, 257, 235, 22 ha in winter). "No clear trend" means the data can't tell, not that a lake is stable.
+- Caveats: only winter is validated against hand labels; areas carry the test-set undercount of dark water (above); per-year intervals are not propagated into the slope CI; extent only, no causes.
 
 ## Demo site (2026-11-14)
 
@@ -89,7 +90,7 @@ uv run pytest
 |---|---|
 | D1 | 25–40 lakes, mixed size and condition, minimum ~2 ha |
 | D2 | OSM + manual review. Dropped `w1054822214` Vrishabhavati (river corridor) and `w1054822222` Nagarbhavi Thorai (no water any year) -> 34 lakes (random sample); +10 well-known lakes added on request 2026-11-14, tagged `sample=added` |
-| D3 | 2018 to 2025, winter (Jan-Feb) window only. 2017 dropped (2-4 clear days); post-monsoon dropped (2-4/yr) |
+| D3 | 2018 to 2025, winter (Jan-Feb) for maps and validation; pre-monsoon (Mar-mid May) added 2026-11-14 for trends only. 2017 dropped (2-4 clear days); post-monsoon dropped (2-4/yr) |
 | D13 | 3-class breakdown per lake-year: open water / vegetated surface / bare-or-built inside the boundary |
 | D4 | Indices + U-Net (U-Net built regardless of index results) |
 | D9 | Planetary Computer for Sentinel-2 (Dynamic World still via Earth Engine) |

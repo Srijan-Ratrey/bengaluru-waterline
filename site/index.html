@@ -182,6 +182,7 @@
   <h2>About Bengaluru Waterline</h2>
   <p style="color:var(--text-2)">How much open water and how much weed cover each lake had every winter (Jan-Feb), measured from
     10 m Sentinel-2 satellite images. Water is where MNDWI &gt; 0; vegetation is NDVI &gt; 0.5 inside the lake outline.
+    Trends also use a second, pre-monsoon reading each year (Mar-mid May).
     Every number has a range, and the method was checked against hand-drawn maps of lakes it was never tuned on.</p>
   <p style="color:var(--text-2)">Lakes: 34 were drawn at random from all named OpenStreetMap lakes of at least 2 ha
     (12 per size band), so they stand for Bengaluru's lakes in general. 10 well-known lakes the draw missed were added
@@ -191,7 +192,9 @@
     <li><b>Water areas run low.</b> On 12 held-out test lakes the median water-area error was 24%, against a 10% target
       (missed). Dark, deep water is the main cause: the water index calls some of it land.</li>
     <li>The range around each area held the hand-labelled value 83% of the time (target 80-100%).</li>
-    <li>8 winters is too few to call a trend for most lakes. <i>No clear trend</i> means the data can't tell, not that the lake is stable.</li>
+    <li>8 years is too few to call a trend for most lakes, even with two readings a year (they rise and fall together, so the second adds little).
+      <i>No clear trend</i> means the data can't tell, not that the lake is stable.</li>
+    <li>Only the winter readings were checked against hand labels; the pre-monsoon ones use the same method unchecked.</li>
     <li>One person drew all hand labels; there is no second-annotator check yet.</li>
     <li>Extent only: nothing here measures water quality or depth, or explains causes.</li>
   </ul>
@@ -338,12 +341,14 @@ function detailView(l) {
     <div class="trend">
       ${trendLine("Open water", l.verdict, l.slope, l.slope_lo, l.slope_hi)}
       ${trendLine("Vegetation", l.verdict_veg, l.slope_veg)}
+      <p class="note">Trends use both readings a year: winter (Jan-Feb) and pre-monsoon (Mar-mid May).</p>
     </div>
     ${l.flags.map(f => `<div class="flag"><b>⚠ ${FLAG[f][0]}:</b> ${FLAG[f][1]}</div>`).join("")}
     <div class="chart-box"><canvas id="chart" role="img" aria-label="Open water and vegetation area by year"></canvas></div>
     <div class="legend">
-      <span><span class="sw" style="background:${COL.water}"></span>Open water</span>
+      <span><span class="sw" style="background:${COL.water}"></span>Open water (Jan-Feb)</span>
       <span><span class="sw" style="background:#3987e544"></span>Range</span>
+      ${l.pre_area?.some(v => v != null) ? `<span><span class="sw" style="background:none;border:2px dashed ${COL.water}"></span>Pre-monsoon water (Mar-May)</span>` : ""}
       <span><span class="sw" style="background:${COL.veg}"></span>Vegetation</span>
       ${l.labelled.some(v => v != null) ? '<span><b style="margin-right:5px">✕</b>Hand-labelled water</span>' : ""}
     </div>
@@ -367,6 +372,8 @@ function drawChart(l) {
       { label: "low", data: l.area_lo, borderWidth: 0, pointRadius: 0, pointHitRadius: 0 },
       { label: "Range", data: l.area_hi, borderWidth: 0, pointRadius: 0, pointHitRadius: 0, fill: "-1", backgroundColor: "#3987e533" },
       line("Open water", l.area, COL.water),
+      { ...line("Pre-monsoon water", l.pre_area || [], COL.water), borderDash: [5, 4], borderWidth: 1.5,
+        pointRadius: 3, backgroundColor: "#12161d", pointBorderColor: COL.water, pointBorderWidth: 1.5 },
       line("Vegetation", l.veg_ha, COL.veg),
       { label: "Hand-labelled", data: l.labelled, showLine: false, pointStyle: "crossRot", pointRadius: 7, borderColor: "#eef1f5", borderWidth: 2 },
     ] },
