@@ -9,5 +9,3 @@ __pycache__/
 cache/
 *.gpkg-shm
 *.gpkg-wal
-site/data.js
-site/img/
