@@ -52,7 +52,7 @@ def trend(x: pd.DataFrame, alpha: float = 0.1) -> dict:
             "slope_hi": slopes[min(hi, k - 1)], "p": p, "n_years": n}  # fmt: skip
 
 
-def trends(a: pd.DataFrame, col: str, alpha: float = 0.1) -> pd.DataFrame:
+def trends(a: pd.DataFrame, col: str, alpha: float = 0.1, possible_p: float = 0.05) -> pd.DataFrame:
     """Per-lake trend of `col` over every season in `a` (column `season`, default one season), with
     Benjamini-Hochberg q across lakes and a plain-language verdict. Years missing a season are dropped."""
     a = a if "season" in a else a.assign(season="winter")
@@ -63,9 +63,12 @@ def trends(a: pd.DataFrame, col: str, alpha: float = 0.1) -> pd.DataFrame:
         }
     ).T.astype(float)
     t["q"] = false_discovery_control(t.p)
+    # "possibly": p < possible_p for this lake alone, but not after the correction across lakes. At
+    # p < 0.05 about 1 in 20 lakes with no real change would get this label by chance.
+    sure, maybe, down, up = t.q < alpha, t.p < possible_p, t.slope < 0, t.slope > 0
     t["verdict"] = np.select(
-        [(t.q < alpha) & (t.slope < 0), (t.q < alpha) & (t.slope > 0)],
-        ["shrinking", "growing"],
+        [sure & down, sure & up, maybe & down, maybe & up],
+        ["shrinking", "growing", "possibly shrinking", "possibly growing"],
         "no clear trend",
     )
     return t.rename_axis("lake_id").reset_index()

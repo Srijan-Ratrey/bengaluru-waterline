@@ -1,8 +1,8 @@
 lake_id,slope,slope_lo,slope_hi,p,n_years,q,verdict,slope_veg,q_veg,verdict_veg,name,area_first,area_last
 r10179602,-0.327,-2.1,0.848,0.623,8.0,0.806,no clear trend,0.245,0.885,no clear trend,Yelahanka Lake,96.23,87.73
-r15989750,0.295,0.048,0.618,0.042,8.0,0.186,no clear trend,0.259,1.0,no clear trend,Puttenahalli Lake,0.07,0.58
+r15989750,0.295,0.048,0.618,0.042,8.0,0.186,possibly growing,0.259,1.0,no clear trend,Puttenahalli Lake,0.07,0.58
 r17390866,1.903,1.273,2.22,0.002,8.0,0.059,growing,-0.715,0.356,no clear trend,Horamavu Agara Lake,0.07,11.45
-r18077306,0.352,0.149,0.475,0.02,8.0,0.125,no clear trend,0.01,1.0,no clear trend,Munekolala Lake,2.45,4.15
+r18077306,0.352,0.149,0.475,0.02,8.0,0.125,possibly growing,0.01,1.0,no clear trend,Munekolala Lake,2.45,4.15
 r1853330,-0.06,-1.378,0.01,0.371,8.0,0.527,no clear trend,0.084,1.0,no clear trend,Vengayyana Lake,9.26,0.3
 r19306126,-1.061,-4.84,0.33,0.226,8.0,0.43,no clear trend,-4.129,1.0,no clear trend,Varthur Lake,48.54,23.84
 r19353942,0.0,-0.012,0.398,0.838,8.0,0.996,no clear trend,-3.437,0.379,no clear trend,Ramapura Kere,3.49,3.52
@@ -20,26 +20,26 @@ r9321012,-0.07,-0.473,1.23,0.901,8.0,1.0,no clear trend,-0.368,0.808,no clear tr
 w1088209009,0.021,0.0,0.177,0.162,8.0,0.374,no clear trend,-0.244,0.885,no clear trend,Gunjuru Palya Lake,0.77,0.93
 w1092686472,3.478,-4.03,20.524,0.266,8.0,0.444,no clear trend,-0.292,1.0,no clear trend,Budigere Lake,22.85,29.45
 w1092941882,0.004,-0.003,0.01,0.337,8.0,0.511,no clear trend,0.268,0.356,no clear trend,Thiagalara Chowdenahalli Lake,0.47,0.16
-w1144246453,0.037,0.015,0.08,0.023,8.0,0.125,no clear trend,0.467,0.079,growing,Singanayakanahalli Lake,0.17,0.46
-w1178402477,-0.348,-0.62,-0.15,0.008,8.0,0.105,no clear trend,0.099,0.449,no clear trend,Hommadevanahalli Lake,3.38,1.32
+w1144246453,0.037,0.015,0.08,0.023,8.0,0.125,possibly growing,0.467,0.079,growing,Singanayakanahalli Lake,0.17,0.46
+w1178402477,-0.348,-0.62,-0.15,0.008,8.0,0.105,possibly shrinking,0.099,0.449,no clear trend,Hommadevanahalli Lake,3.38,1.32
 w1186908539,0.015,-0.465,0.584,0.759,8.0,0.95,no clear trend,6.412,0.356,no clear trend,Sarjapur Doddakere Lake,11.35,1.03
 w118906503,0.077,-0.252,0.227,0.363,8.0,0.527,no clear trend,0.787,0.372,no clear trend,Chudahalli Lake,29.24,32.62
 w125758396,-1.656,-2.107,-0.97,0.003,8.0,0.059,shrinking,1.488,0.052,growing,Gattahalli Lake,24.84,16.12
-w1283528233,0.061,0.0,0.094,0.016,8.0,0.122,no clear trend,0.656,0.356,no clear trend,Sompura Lake,0.01,0.52
+w1283528233,0.061,0.0,0.094,0.016,8.0,0.122,possibly growing,0.656,0.356,no clear trend,Sompura Lake,0.01,0.52
 w148216683,0.004,0.0,0.017,0.194,8.0,0.407,no clear trend,-0.066,1.0,no clear trend,Gunjuru Lake,0.66,0.35
 w172845847,0.063,-0.01,0.23,0.234,8.0,0.43,no clear trend,-0.042,0.808,no clear trend,Lalbagh Tank,7.79,9.49
-w227097881,0.308,-0.15,0.72,0.158,8.0,0.374,no clear trend,-0.168,0.294,no clear trend,Doddkammanahalli Lake,1.57,3.86
+w227097881,0.308,-0.15,0.72,0.158,8.0,0.374,no clear trend,-0.168,0.294,possibly shrinking,Doddkammanahalli Lake,1.57,3.86
 w28091209,-1.214,-3.432,0.91,0.607,8.0,0.806,no clear trend,1.527,0.642,no clear trend,Yellamallappa Chetty Lake,79.91,76.6
 w28126428,0.139,-0.037,0.305,0.234,8.0,0.43,no clear trend,-0.001,1.0,no clear trend,Byrasandra Lake,0.99,2.0
-w326284762,-7.687,-11.277,-1.55,0.017,8.0,0.122,no clear trend,7.857,0.279,no clear trend,Muthanalluru Lake,64.78,13.41
+w326284762,-7.687,-11.277,-1.55,0.017,8.0,0.122,possibly shrinking,7.857,0.279,possibly growing,Muthanalluru Lake,64.78,13.41
 w41662659,31.732,-5.94,60.26,0.17,8.0,0.374,no clear trend,-0.008,1.0,no clear trend,Hesaraghatta Lake,152.5,260.32
 w41667619,0.231,-3.128,5.405,1.0,8.0,1.0,no clear trend,0.95,0.372,no clear trend,Gummanahalli Lake,44.08,41.84
-w41667656,0.75,0.195,1.328,0.039,8.0,0.186,no clear trend,1.515,0.372,no clear trend,Kogilu Lake,0.77,7.17
+w41667656,0.75,0.195,1.328,0.039,8.0,0.186,possibly growing,1.515,0.372,no clear trend,Kogilu Lake,0.77,7.17
 w41667728,0.2,-7.067,52.605,1.0,8.0,1.0,no clear trend,1.544,1.0,no clear trend,Hosakote lake,180.46,22.12
-w43102038,2.657,1.268,7.044,0.01,8.0,0.105,no clear trend,-0.975,0.356,no clear trend,Bagaluru Kere,8.88,37.65
+w43102038,2.657,1.268,7.044,0.01,8.0,0.105,possibly growing,-0.975,0.356,no clear trend,Bagaluru Kere,8.88,37.65
 w44546800,0.133,-0.418,0.175,0.277,8.0,0.444,no clear trend,0.082,0.372,no clear trend,Kowdenahalli Lake,2.58,3.85
 w45741726,0.01,0.0,0.15,0.106,8.0,0.333,no clear trend,0.09,1.0,no clear trend,Hosakere,0.02,2.55
 w45921399,-1.025,-2.182,-0.005,0.061,8.0,0.222,no clear trend,1.385,0.619,no clear trend,Narasappanahalli Lake,9.2,0.31
 w560721005,0.004,0.0,0.01,0.118,8.0,0.346,no clear trend,0.049,0.372,no clear trend,Komapana Agrahara Lake,0.01,0.08
 w675685139,0.164,-1.07,1.717,0.903,8.0,1.0,no clear trend,-0.017,1.0,no clear trend,Sulikere/ Herekere Lake,35.27,31.52
-w904374443,0.4,0.041,0.753,0.049,8.0,0.194,no clear trend,-0.039,1.0,no clear trend,Palanahalli Lake,3.43,3.72
+w904374443,0.4,0.041,0.753,0.049,8.0,0.194,possibly growing,-0.039,1.0,no clear trend,Palanahalli Lake,3.43,3.72

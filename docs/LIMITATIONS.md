@@ -51,9 +51,10 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 ## Trends
 
 12. **There is little power to detect trends.**
-    - With 8 years (16 readings over two linked seasons), 42 of 44 lakes come out as "no clear trend" for water; correcting over the random 34 alone, 30 of 34.
+    - With 8 years (16 readings over two linked seasons), 42 of 44 lakes get no firm water verdict (9 of them are labelled "possibly"); correcting over the random 34 alone, 30 of 34.
     - Year-to-year swings are large. Hosakote, for example: 180, 24, 25, 22, 233, 257, 235, 22 ha.
     - "No clear trend" means the data can't tell; it does not mean the lake is stable.
+    - The 9 "possibly" water labels are not corrected for testing 44 lakes. About 2 of them could be chance, and there is no way to tell which.
 13. **The two seasons are not independent evidence.** A wet monsoon raises both the next winter and the next pre-monsoon. The test accounts for this by permuting whole years, so 16 readings give less than twice the power of 8.
 14. **Per-year intervals don't feed into the slope CI.**
     - The CI reflects scatter between years only.

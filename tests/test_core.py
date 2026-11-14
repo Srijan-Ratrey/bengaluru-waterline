@@ -140,6 +140,17 @@ def test_trends_flag_only_clear_monotonic_change():
     assert t.loc["flat", "p"] == 1.0
 
 
+def test_possible_trend_is_significant_alone_but_not_after_correction():
+    years = np.arange(2018, 2026)
+    weak = [10.0, 12, 9, 13, 11, 15, 14, 16]  # p = 0.031 on its own
+    lakes = {"down": 20.0 - 2 * (years - 2018), "weak": weak} | {f"flat{k}": 5.0 for k in range(20)}
+    a = pd.concat(pd.DataFrame({"lake_id": k, "year": years, "area": v}) for k, v in lakes.items())
+    t = trends(a, "area").set_index("lake_id")
+    assert t.loc["weak", "p"] < 0.05 and t.loc["weak", "q"] >= 0.1  # 22 lakes tested
+    assert t.loc["weak", "verdict"] == "possibly growing" and t.loc["down", "verdict"] == "shrinking"
+    assert (t.verdict == "no clear trend").sum() == 20
+
+
 def test_seasonal_trend_counts_a_repeated_season_once_and_matches_scipy():
     years = np.arange(2018, 2026)
     w = np.array([10.0, 12, 9, 13, 11, 15, 12.5, 16])  # weak upward drift, no ties

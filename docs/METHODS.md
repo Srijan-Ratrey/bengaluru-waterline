@@ -88,6 +88,7 @@ For each lake, over its 16 readings (winter and pre-monsoon, 2018-2025) of water
 - `waterline trends --seasons winter` reproduces the winter-only analysis.
 - **Verdict:**
   - *shrinking* or *growing* when q < 0.1, with the slope's sign giving the direction;
+  - *possibly shrinking* or *possibly growing* when p < 0.05 for the lake on its own but q >= 0.1. These are leads, not findings: with no real change anywhere, about 1 lake in 20 would get this label by chance (about 2 of 44);
   - *no clear trend* otherwise.
 
 The per-year intervals are not propagated into the slope CI.

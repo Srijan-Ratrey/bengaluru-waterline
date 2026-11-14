@@ -73,6 +73,8 @@
           border: 1px solid var(--line); color: var(--text-2); white-space: nowrap; }
   .chip.shrinking { color: #ff9a6e; border-color: #d9592666; background: #d9592614; }
   .chip.growing { color: #8cbcff; border-color: #3987e566; background: #3987e514; }
+  .chip.possibly { background: none; border-style: dashed; }
+  .tile .maybe { display: block; font-size: 11px; }
   .chip.warn { color: #f3c969; border-color: #c9850066; background: #c985001a; }
 
   /* detail */
@@ -194,6 +196,8 @@
     <li>The range around each area held the hand-labelled value 83% of the time (target 80-100%).</li>
     <li>8 years is too few to call a trend for most lakes, even with two readings a year (they rise and fall together, so the second adds little).
       <i>No clear trend</i> means the data can't tell, not that the lake is stable.</li>
+    <li><i>Possibly shrinking / growing</i> (dashed label): the change is significant for that lake on its own (p &lt; 0.05),
+      but not after allowing for testing 44 lakes at once. Treat these as leads: about 2 of the 44 would get the label by chance.</li>
     <li>Only the winter readings were checked against hand labels; the pre-monsoon ones use the same method unchecked.</li>
     <li>One person drew all hand labels; there is no second-annotator check yet.</li>
     <li>Extent only: nothing here measures water quality or depth, or explains causes.</li>
@@ -228,7 +232,13 @@ const $ = id => document.getElementById(id);
 const fmt = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
 const ha = x => x < 10 ? x.toFixed(1) : Math.round(x).toString();
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const chip = v => v === "no clear trend" ? '<span class="chip">no clear trend</span>' : `<span class="chip ${v}">${ARROW[v]} ${v}</span>`;
+const MAYBE = "significant for this lake alone (p < 0.05), but not after correcting for testing 44 lakes; about 2 of the 44 would get this by chance";
+const dirOf = v => v.endsWith("shrinking") ? "shrinking" : v.endsWith("growing") ? "growing" : null;
+const chip = v => {
+  const dir = dirOf(v), maybe = v.startsWith("possibly");
+  return dir ? `<span class="chip ${dir}${maybe ? " possibly" : ""}"${maybe ? ` title="${MAYBE}"` : ""}>${ARROW[dir]} ${v}</span>`
+             : '<span class="chip">no clear trend</span>';
+};
 const byId = Object.fromEntries(DATA.map(l => [l.id, l]));
 let year = YEARS.at(-1), selected = null, filter = null, chart = null, timer = null, query = "", sort = "change";
 const yi = () => YEARS.indexOf(year);
@@ -296,10 +306,14 @@ function spark(l) {
     stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/></svg>`;
 }
 function listView() {
-  const tiles = [["all", DATA.length, "lakes"], ["shrinking", counts.shrinking || 0, "▼ shrinking"],
-                 ["growing", counts.growing || 0, "▲ growing"], ["no clear trend", counts["no clear trend"] || 0, "no clear trend"]];
-  const key = { change: l => (l.verdict === "no clear trend") * 1e6 - Math.abs(l.slope), name: l => l.name, size: l => -l.area[yi()] }[sort];
-  const rows = DATA.filter(l => (!filter || l.verdict === filter) && l.name.toLowerCase().includes(query))
+  const n = v => counts[v] || 0, more = v => n("possibly " + v) ? `<span class="maybe">+${n("possibly " + v)} possibly</span>` : "";
+  const tiles = [["all", DATA.length, "lakes"], ["shrinking", n("shrinking"), "▼ shrinking" + more("shrinking")],
+                 ["growing", n("growing"), "▲ growing" + more("growing")], ["no clear trend", n("no clear trend"), "no clear trend"]];
+  // confirmed trends first, then possible ones, each by size of change
+  const rank = l => l.verdict === "no clear trend" ? 2 : l.verdict.startsWith("possibly") ? 1 : 0;
+  const key = { change: l => rank(l) * 1e6 - Math.abs(l.slope), name: l => l.name, size: l => -l.area[yi()] }[sort];
+  const rows = DATA.filter(l => (!filter || (filter === "no clear trend" ? l.verdict === filter : dirOf(l.verdict) === filter))
+                                && l.name.toLowerCase().includes(query))
     .sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0));
   const opt = (v, t) => `<option value="${v}"${sort === v ? " selected" : ""}>${t}</option>`;
   return `
