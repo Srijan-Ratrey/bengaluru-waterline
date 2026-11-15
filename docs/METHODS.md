@@ -1,6 +1,6 @@
 # Methods
 
-How Bengaluru Waterline turns Sentinel-2 scenes into per-lake water, vegetation and land areas, intervals and trends. Every step below is one CLI command (see the README quickstart). Settings live in [configs/experiment.toml](../configs/experiment.toml).
+How Bengaluru Waterline turns Sentinel-2 scenes into per-lake water, vegetation and land areas, intervals and trends. Every step below is one CLI command (see the README's Reproduce section). Settings live in [configs/experiment.toml](../configs/experiment.toml).
 
 ## 1. Lakes (`waterline lakes`)
 

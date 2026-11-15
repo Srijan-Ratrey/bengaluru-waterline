@@ -9,7 +9,7 @@ import pystac_client
 
 CATALOG = "https://planetarycomputer.microsoft.com/api/stac/v1"
 COLLECTION = "sentinel-2-l2a"
-# Season windows (MM-DD). D3: winter chosen 2026-10-26 from clear-day counts (7-11/yr), see README.
+# Season windows (MM-DD). D3: winter chosen 2026-10-26 from clear-day counts (7-11/yr), see docs/DECISIONS.md.
 # Pre-monsoon (8-14 clear days/yr) added 2026-11-14 for trend power; trends use both, the site's maps winter.
 SEASONS = {"winter": ("01-01", "02-28"), "premonsoon": ("03-01", "05-15")}
 
