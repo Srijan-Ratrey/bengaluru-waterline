@@ -130,12 +130,23 @@ def measure(
     g = gpd.read_file(LAKES).set_index("lake_id").to_crs(comp.CRS)
     g_ll = g.to_crs(4326)
     lock = json.loads(LOCK.read_text())
-    items = dict(zip([r["id"] for r in lock], stac.fetch_items([r["id"] for r in lock])))
     lake_ids = only.split(",") if only else list(g.index)
+    groups = _group(lock)
+    # Catalogue entries only for composites not cached yet (none on a re-run).
+    ids = sorted(
+        {
+            r["id"]
+            for lake in lake_ids
+            for (year, season), recs in groups.items()
+            if not (COMPOSITES / f"{lake}_{year}_{season}.tif").exists()
+            for r in recs
+        }
+    )
+    items = dict(zip(ids, stac.fetch_items(ids))) if ids else {}
     COMPOSITES.mkdir(parents=True, exist_ok=True)
     rows, failed = [], []
     for lake in lake_ids:
-        for (year, season), recs in _group(lock).items():
+        for (year, season), recs in groups.items():
             path = COMPOSITES / f"{lake}_{year}_{season}.tif"
             try:
                 if path.exists():
