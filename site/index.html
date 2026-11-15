@@ -306,9 +306,11 @@ function spark(l) {
     stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/></svg>`;
 }
 function listView() {
-  const n = v => counts[v] || 0, more = v => n("possibly " + v) ? `<span class="maybe">+${n("possibly " + v)} possibly</span>` : "";
-  const tiles = [["all", DATA.length, "lakes"], ["shrinking", n("shrinking"), "▼ shrinking" + more("shrinking")],
-                 ["growing", n("growing"), "▲ growing" + more("growing")], ["no clear trend", n("no clear trend"), "no clear trend"]];
+  // shrinking/growing tiles count confirmed + possible, so the tiles add up to all lakes
+  const n = v => counts[v] || 0, all = v => n(v) + n("possibly " + v);
+  const of = v => n("possibly " + v) ? `<span class="maybe">(${n("possibly " + v)} possibly)</span>` : "";
+  const tiles = [["all", DATA.length, "lakes"], ["shrinking", all("shrinking"), "▼ shrinking" + of("shrinking")],
+                 ["growing", all("growing"), "▲ growing" + of("growing")], ["no clear trend", n("no clear trend"), "no clear trend"]];
   // confirmed trends first, then possible ones, each by size of change
   const rank = l => l.verdict === "no clear trend" ? 2 : l.verdict.startsWith("possibly") ? 1 : 0;
   const key = { change: l => rank(l) * 1e6 - Math.abs(l.slope), name: l => l.name, size: l => -l.area[yi()] }[sort];
