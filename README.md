@@ -53,7 +53,7 @@ Docs: [methods](docs/METHODS.md) · [validation](docs/VALIDATION.md) · [limitat
 [srijan-ratrey.github.io/bengaluru-waterline](https://srijan-ratrey.github.io/bengaluru-waterline/) is a static page in `site/`, deployed to GitHub Pages by `.github/workflows/pages.yml` on every push to `main` that touches `site/`. It shows:
 
 - a dark map with year buttons and a play button, overlaying each lake's winter Sentinel-2 true-colour composite (clipped to the lake region) and the frozen water/vegetation map, with lake outlines on top;
-- a searchable, sortable lake list with sparklines, and filter tiles by trend verdict (confirmed, plus "+N possibly");
+- a searchable, sortable lake list with sparklines, and filter tiles by trend verdict (each count includes possible trends, shown in brackets);
 - per lake: water and vegetation areas with their range, both trends, a chart with the error band, the pre-monsoon line, the vegetation series and any hand-labelled areas, and a ⚠ flag for lakes that are mostly vegetation or have a range wider than their open water;
 - an About box with the test-set results, how far to trust them, and links to the data and this repo.
 

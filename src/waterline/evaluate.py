@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from waterline.indices import PIXEL_HA, area_ha, area_interval, mndwi, ndvi, ndwi
-from waterline.labels import LAND, VEG, WATER
+from waterline.labels import LABEL_YEARS, LAND, VEG, WATER
 
 CLASSES = {"land": LAND, "water": WATER, "veg": VEG}
 WATER_T = {
@@ -78,7 +78,8 @@ def summary(a: pd.DataFrame) -> dict:
         hit = a[f"{k}_hit"].sum()
         out[f"iou_{k}"] = hit / (a[f"{k}_true"].sum() + a[f"{k}_pred"].sum() - hit)
     w = a.pivot(index="lake_id", columns="year", values=["area_true", "area"])
-    sign = lambda col: np.sign(w[(col, 2025)] - w[(col, 2018)])
+    first, last = LABEL_YEARS[0], LABEL_YEARS[-1]
+    sign = lambda col: np.sign(w[(col, last)] - w[(col, first)])
     out["trend_sign_agreement"] = (sign("area_true") == sign("area")).mean()
     return out
 
