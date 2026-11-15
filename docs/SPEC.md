@@ -1,3 +1,5 @@
+> The original project spec, written under the working name *LakeWatch BLR* and kept as written. The project is now **Bengaluru Waterline**; for what was actually decided, see [DECISIONS.md](DECISIONS.md).
+
 # LakeWatch BLR: Satellite Lake-Extent Tracker for Bengaluru
 
 Working name only. A name collision has not been checked (see D15).
