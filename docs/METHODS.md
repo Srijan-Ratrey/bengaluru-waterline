@@ -26,7 +26,7 @@ Water is counted out to the buffer because OSM outlines often sit inside the rea
 - **Source:** Sentinel-2 L2A from Microsoft Planetary Computer.
 - **Windows:** two a year, 2018-2025 (D3):
   - **winter** (1 Jan - 28 Feb), 7-11 clear days a year. This is the validated season: the hand labels, the map overlays, the area ranges and the site's numbers all use it.
-  - **pre-monsoon** (1 Mar - 15 May), 8-14 clear days a year. Added 2026-11-14 to give the trend tests twice the readings. It has no hand labels.
+  - **pre-monsoon** (1 Mar - 15 May), 8-14 clear days a year. Added 2026-11-14 to give the trend tests twice the readings. It has no hand labels. Its agreement with Dynamic World matches winter's (see [LIMITATIONS](LIMITATIONS.md) item 10).
   - 2017 has only 2-4 clear days in every window and was dropped; the post-monsoon window (2-4 a year) was dropped too.
 - **Pinning:** every scene ID is pinned in `data/scenes.lock.json`, with scene cloud cover below 50%.
 - **Radiometry:** reflectance = (DN + offset) / 10000. The offset (0 or -1000) is read per scene from `BOA_ADD_OFFSET` in the product XML. It is not in the STAC metadata. DN 0 is treated as no data.

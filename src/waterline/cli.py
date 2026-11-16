@@ -122,7 +122,7 @@ def measure(
     """Composite (cached as GeoTIFF in data/composites) + all methods for every lake-year -> observations.parquet.
 
     Without an Earth Engine project, new composites get an all-NaN `dw_water` band and no Dynamic World
-    rows; the reported areas use Sentinel-2 only. Delete those composites to add DW later."""
+    rows; the reported areas use Sentinel-2 only. A later run with a project fills DW into those composites."""
     if ee_project:
         dynworld.init(ee_project)
     else:
@@ -151,6 +151,9 @@ def measure(
             try:
                 if path.exists():
                     c = comp.load(path)
+                    if ee_project and np.isnan(c["dw_water"].values).all():
+                        c["dw_water"] = (("y", "x"), _dw(c, year, season))
+                        comp.save(c, path)
                 else:
                     recs = [
                         r
@@ -160,13 +163,8 @@ def measure(
                     c = comp.composite(
                         [items[r["id"]] for r in recs], [r["boa_offset"] for r in recs], g.geometry[lake]
                     )
-                    start, end = stac.SEASONS[season]
-                    end_excl = dt.date.fromisoformat(f"{year}-{end}") + dt.timedelta(days=1)
-                    gb = c.odc.geobox
                     dw = (
-                        dynworld.water_prob(gb, f"{year}-{start}", str(end_excl))
-                        if ee_project
-                        else np.full(gb.shape, np.nan, "float32")
+                        _dw(c, year, season) if ee_project else np.full(c.odc.geobox.shape, np.nan, "float32")
                     )
                     c["dw_water"] = (("y", "x"), dw)
                     comp.save(c, path)
@@ -191,6 +189,13 @@ def measure(
         typer.echo(f"  {f}")
     if failed:
         raise typer.Exit(1)
+
+
+def _dw(c, year: int, season: str) -> np.ndarray:
+    """Dynamic World water probability over the composite's season window, on its grid."""
+    start, end = stac.SEASONS[season]
+    end_excl = dt.date.fromisoformat(f"{year}-{end}") + dt.timedelta(days=1)
+    return dynworld.water_prob(c.odc.geobox, f"{year}-{start}", str(end_excl))
 
 
 @app.command()
