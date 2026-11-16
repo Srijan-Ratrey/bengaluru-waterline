@@ -43,7 +43,7 @@ Every known failure case, with examples. Numbers come from [VALIDATION.md](VALID
 10. **Two dry-season windows, no monsoon.**
     - Areas are measured in winter (Jan-Feb) and pre-monsoon (Mar-mid May). Both are dry seasons; the monsoon and post-monsoon months are too cloudy (2-4 clear days a year), so peak water levels are never seen.
     - **Only winter is validated.** The pre-monsoon areas use the same frozen method but have no hand labels. Dry beds, grass and shrinking margins are commoner before the monsoon, so the land/vegetation confusion (item 4) may be worse there.
-    - The pre-monsoon composites were built without the Dynamic World cross-check (no Earth Engine project at the time).
+    - Dynamic World agrees with the pre-monsoon areas as well as with winter's (MNDWI > 0 vs DW >= 0.5, all 44 lakes x 8 years: median IoU 0.68 vs 0.67 in winter; median area ratio 0.89 vs 0.88; Spearman 0.96 in both). This is a consistency check, not validation: DW has its own errors on weedy lakes (item 6).
 11. **2018-2025 only.**
     - 2017 has 2-4 clear winter days and was dropped.
     - Earlier years would need Landsat, which is out of scope for v1 (D16).
